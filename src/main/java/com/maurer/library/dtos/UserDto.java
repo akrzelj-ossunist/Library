@@ -1,6 +1,7 @@
 package com.maurer.library.dtos;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,6 @@ public class UserDto {
     @NotBlank(message = "User address is mandatory")
     private String address;
 
-    @NotBlank(message = "User birthday is mandatory")
+    @NotNull(message = "User birthday is mandatory")
     private Date birthday;
 }

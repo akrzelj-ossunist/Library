@@ -6,9 +6,6 @@ import com.maurer.library.exceptions.AlreadyExistException;
 import com.maurer.library.exceptions.InvalidArgumentsException;
 import com.maurer.library.exceptions.ObjectDoesntExistException;
 import com.maurer.library.models.Book;
-import com.maurer.library.repositories.jpa.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;

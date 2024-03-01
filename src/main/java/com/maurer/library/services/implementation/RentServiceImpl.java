@@ -6,12 +6,11 @@ import com.maurer.library.models.Book;
 import com.maurer.library.models.RentEntry;
 import com.maurer.library.models.User;
 import com.maurer.library.models.enums.Status;
-import com.maurer.library.repositories.jpa.RentRepository;
+import com.maurer.library.repositories.RentRepository;
 import com.maurer.library.services.interfaces.BookService;
 import com.maurer.library.services.interfaces.RentService;
 import com.maurer.library.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,7 +23,7 @@ import java.util.*;
  *  Implementation of rent entry service which stores data into java collection
  **/
 @Service
-public class RentServiceImplJpa implements RentService {
+public class RentServiceImpl implements RentService {
 
     @Autowired
     private RentRepository rentRepository;

@@ -1,10 +1,9 @@
 package com.maurer.library.dtos;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Date;
 
 @Getter
 @Setter
@@ -16,6 +15,7 @@ public class BookDto {
     @NotBlank(message = "Author name is mandatory")
     private String author;
 
+    @Nullable
     private String note;
 
     @NotBlank(message = "Book ISBN is mandatory")

@@ -9,12 +9,11 @@ import com.maurer.library.models.Author;
 import com.maurer.library.models.Book;
 import com.maurer.library.models.RentEntry;
 import com.maurer.library.models.enums.Genre;
-import com.maurer.library.repositories.jpa.BookRepository;
+import com.maurer.library.repositories.BookRepository;
 import com.maurer.library.services.interfaces.AuthorService;
 import com.maurer.library.services.interfaces.BookService;
 import com.maurer.library.services.interfaces.RentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -23,7 +22,7 @@ import java.util.*;
  *  Implementation of book service which stores data into java collection
  **/
 @Service
-public class BookServiceImplJpa implements BookService {
+public class BookServiceImpl implements BookService {
 
     @Autowired
     private BookRepository bookRepository;

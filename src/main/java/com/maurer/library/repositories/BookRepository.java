@@ -1,4 +1,4 @@
-package com.maurer.library.repositories.jpa;
+package com.maurer.library.repositories;
 
 import com.maurer.library.models.Author;
 import com.maurer.library.models.Book;

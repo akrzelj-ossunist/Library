@@ -3,11 +3,10 @@ package com.maurer.library.services.implementation;
 import com.maurer.library.dtos.AuthorDto;
 import com.maurer.library.exceptions.*;
 import com.maurer.library.models.Author;
-import com.maurer.library.repositories.jpa.AuthorRepository;
+import com.maurer.library.repositories.AuthorRepository;
 import com.maurer.library.services.interfaces.AuthorService;
 import com.maurer.library.services.interfaces.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,14 +15,14 @@ import java.util.*;
  *  Implementation of author service which stores data into java collection
  **/
 @Service
-public class AuthorServiceImplJpa implements AuthorService {
+public class AuthorServiceImpl implements AuthorService {
 
     @Autowired
     private AuthorRepository authorRepository;
 
     private final BookService bookService;
 
-    public AuthorServiceImplJpa(BookService bookService) {
+    public AuthorServiceImpl(BookService bookService) {
         this.bookService = bookService;
     }
 

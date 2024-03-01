@@ -1,10 +1,7 @@
 package com.maurer.library.controllers.implementation;
 
 import com.maurer.library.controllers.interfaces.UserController;
-import com.maurer.library.dtos.UserDto;
-import com.maurer.library.dtos.UserLoginDto;
-import com.maurer.library.dtos.UserPasswordDto;
-import com.maurer.library.dtos.UserUpdateDto;
+import com.maurer.library.dtos.*;
 import com.maurer.library.exceptions.*;
 import com.maurer.library.models.User;
 import com.maurer.library.services.interfaces.UserService;
@@ -17,25 +14,28 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+import static com.maurer.library.utils.ConvertModel.convertUser;
+import static com.maurer.library.utils.ConvertModel.convertUserList;
+
 @RestController
 @RequestMapping("/user")
 @CrossOrigin
-public class UserControllerImplJpa implements UserController {
+public class UserControllerImpl implements UserController {
 
 
     private final UserService userService;
 
     @Autowired
-    public UserControllerImplJpa(UserService userService) {
+    public UserControllerImpl(UserService userService) {
         this.userService = userService;
     }
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<User> register(@Valid @RequestBody UserDto userDto) throws EmailMismatchException, PasswordMismatchException, AlreadyExistException, InvalidArgumentsException {
+    public ResponseEntity<UserResDto> register(@Valid @RequestBody UserDto userDto) throws EmailMismatchException, PasswordMismatchException, AlreadyExistException, InvalidArgumentsException {
 
         User newUser = userService.addUser(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(convertUser(newUser));
     }
 
     @Override
@@ -51,11 +51,11 @@ public class UserControllerImplJpa implements UserController {
 
     @Override
     @PutMapping("/edit/{id}")
-    public ResponseEntity<User> edit(@PathVariable("id") String userId, @Valid @RequestBody UserUpdateDto userDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
+    public ResponseEntity<UserResDto> edit(@PathVariable("id") String userId, @Valid @RequestBody UserUpdateDto userDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
 
         User updatedUser = userService.updateUser(userId, userDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+        return ResponseEntity.status(HttpStatus.OK).body(convertUser(updatedUser));
     }
 
     @Override
@@ -80,35 +80,33 @@ public class UserControllerImplJpa implements UserController {
 
     @Override
     @GetMapping("/list")
-    public ResponseEntity<List<User>> list() {
+    public ResponseEntity<List<UserResDto>> list() {
 
         List<User> userList = userService.findAllUsers();
 
-        if (userList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        if (userList.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
-        return ResponseEntity.ok().body(userList);
+        return ResponseEntity.ok().body(convertUserList(userList));
     }
 
     @Override
     @GetMapping("/profile/{id}")
-    public ResponseEntity<User> profile(@PathVariable("id") String userId) throws ObjectDoesntExistException, InvalidArgumentsException {
+    public ResponseEntity<UserResDto> profile(@PathVariable("id") String userId) throws ObjectDoesntExistException, InvalidArgumentsException {
 
             User userProfile = userService.findUserById(userId);
 
-            return ResponseEntity.ok().body(userProfile);
+            return ResponseEntity.ok().body(convertUser(userProfile));
 
     }
 
     @Override
     @GetMapping("/query")
-    public ResponseEntity<List<User>> filterList(@RequestParam Map<String, String> allParams) throws InvalidArgumentsException {
+    public ResponseEntity<List<UserResDto>> filterList(@RequestParam Map<String, String> allParams) throws InvalidArgumentsException {
 
         if(allParams.isEmpty()) throw new InvalidArgumentsException("Invalid amount of params sent!");
 
         List<User> filteredList = userService.filterUsers(allParams);
 
-        return ResponseEntity.ok().body(filteredList);
+        return ResponseEntity.ok().body(convertUserList(filteredList));
     }
 }

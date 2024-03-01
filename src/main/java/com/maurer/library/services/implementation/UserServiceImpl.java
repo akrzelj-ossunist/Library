@@ -8,12 +8,11 @@ import com.maurer.library.exceptions.*;
 import com.maurer.library.models.RentEntry;
 import com.maurer.library.models.User;
 import com.maurer.library.models.enums.UserRole;
-import com.maurer.library.repositories.jpa.UserRepository;
+import com.maurer.library.repositories.UserRepository;
 import com.maurer.library.services.interfaces.RentService;
 import com.maurer.library.services.interfaces.UserService;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,7 +21,7 @@ import java.util.*;
  *  Implementation of user service which stores data into java collection
  **/
 @Service
-public class UserServiceImplJpa implements UserService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;

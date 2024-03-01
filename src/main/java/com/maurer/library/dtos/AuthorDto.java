@@ -1,6 +1,8 @@
 package com.maurer.library.dtos;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +15,6 @@ public class AuthorDto {
     @NotBlank(message = "Author name is mandatory")
     private String fullName;
 
-    @NotBlank(message = "Author date of birth is mandatory")
+    @NotNull(message = "Author birthday is mandatory")
     private Date birthday;
 }

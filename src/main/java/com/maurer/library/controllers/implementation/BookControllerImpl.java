@@ -2,6 +2,7 @@ package com.maurer.library.controllers.implementation;
 
 import com.maurer.library.controllers.interfaces.BookController;
 import com.maurer.library.dtos.BookDto;
+import com.maurer.library.dtos.BookResDto;
 import com.maurer.library.dtos.BookUpdateDto;
 import com.maurer.library.exceptions.AlreadyExistException;
 import com.maurer.library.exceptions.InvalidArgumentsException;
@@ -17,29 +18,38 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+import static com.maurer.library.utils.ConvertModel.convertBook;
+import static com.maurer.library.utils.ConvertModel.convertBookList;
+
 @RestController
-@RequestMapping("/jpa/book")
-public class BookControllerImplJpa implements BookController {
+@RequestMapping("/book")
+@CrossOrigin
+public class BookControllerImpl implements BookController {
+
+
+    private final BookService bookService;
 
     @Autowired
-    private BookService bookService;
+    public BookControllerImpl(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @Override
     @PostMapping("/create")
-    public ResponseEntity<Book> create(@Valid @RequestBody BookDto bookDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
+    public ResponseEntity<BookResDto> create(@Valid @RequestBody BookDto bookDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
 
         Book createdBook = bookService.addBook(bookDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
+        return ResponseEntity.status(HttpStatus.CREATED).body(convertBook(createdBook));
     }
 
     @Override
     @PutMapping("/update/{id}")
-    public ResponseEntity<Book> edit(@PathVariable("id") String bookId,@Valid @RequestBody BookUpdateDto bookUpdateDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
+    public ResponseEntity<BookResDto> edit(@PathVariable("id") String bookId,@Valid @RequestBody BookUpdateDto bookUpdateDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
 
         Book updatedBook = bookService.updateBook(bookUpdateDto, bookId);
 
-        return ResponseEntity.ok().body(updatedBook);
+        return ResponseEntity.ok().body(convertBook(updatedBook));
 
     }
 
@@ -54,30 +64,30 @@ public class BookControllerImplJpa implements BookController {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<Book> bookPage(@PathVariable("id") String bookId) throws ObjectDoesntExistException, InvalidArgumentsException {
+    public ResponseEntity<BookResDto> bookPage(@PathVariable("id") String bookId) throws ObjectDoesntExistException, InvalidArgumentsException {
 
         Book book = bookService.findBookById(bookId);
 
-        return ResponseEntity.ok().body(book);
+        return ResponseEntity.ok().body(convertBook(book));
     }
 
     @Override
     @GetMapping("/list")
-    public ResponseEntity<List<Book>> list() {
+    public ResponseEntity<List<BookResDto>> list() {
 
         List<Book> books = bookService.findAllBooks();
 
-        return ResponseEntity.ok().body(books);
+        return ResponseEntity.ok().body(convertBookList(books));
     }
 
     @Override
     @GetMapping("/query")
-    public ResponseEntity<List<Book>> filterList(@RequestParam Map<String, String> allParams) throws InvalidArgumentsException {
+    public ResponseEntity<List<BookResDto>> filterList(@RequestParam Map<String, String> allParams) throws InvalidArgumentsException {
 
         if(allParams.isEmpty()) throw new InvalidArgumentsException("Invalid amount of params sent!");
 
         List<Book> filteredBooks = bookService.filterBooks(allParams);
 
-        return ResponseEntity.ok().body(filteredBooks);
+        return ResponseEntity.ok().body(convertBookList(filteredBooks));
     }
 }
