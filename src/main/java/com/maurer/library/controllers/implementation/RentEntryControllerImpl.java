@@ -1,5 +1,6 @@
 package com.maurer.library.controllers.implementation;
 
+import com.maurer.library.aspect.LoggerUtil;
 import com.maurer.library.controllers.interfaces.RentEntryController;
 import com.maurer.library.dtos.RentBookDto;
 import com.maurer.library.dtos.RentEntryResDto;
@@ -44,6 +45,9 @@ public class RentEntryControllerImpl implements RentEntryController {
                     .build();
 
         RentEntry rentEntry = rentService.rentBook(rentBookDto);
+
+        LoggerUtil.logInfo("Rent entry for book: " + rentEntry.getBook().getTitle() + " and user: " + rentEntry.getUser().getFullName() + " successfully created!");
+
         return ResponseEntity.status(HttpStatus.CREATED).body(convertRentEntry(rentEntry));
     }
 
@@ -52,6 +56,8 @@ public class RentEntryControllerImpl implements RentEntryController {
     public ResponseEntity<RentEntryResDto> returnBook(@PathVariable("id") String rentEntryId,@Valid @RequestParam String note) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
 
         RentEntry returnedRentEntry = rentService.returnBook(rentEntryId, note);
+
+        LoggerUtil.logInfo("User: : " + returnedRentEntry.getUser().getFullName() + " successfully returned book: " + returnedRentEntry.getBook().getTitle());
 
         return ResponseEntity.ok().body(convertRentEntry(returnedRentEntry));
     }
@@ -69,6 +75,8 @@ public class RentEntryControllerImpl implements RentEntryController {
 
         List<RentEntry> rentEntries = rentService.findAllRentEntries();
 
+        LoggerUtil.logInfo("List of Rent entire successfully fetched!");
+
         return ResponseEntity.ok().body(convertRentEntryList(rentEntries));
     }
 
@@ -77,6 +85,8 @@ public class RentEntryControllerImpl implements RentEntryController {
     public ResponseEntity<RentEntryResDto> rentEntryPage(@PathVariable("id") String rentEntryId) throws ObjectDoesntExistException, InvalidArgumentsException {
 
         RentEntry rentEntry = rentService.findRentEntryById(rentEntryId);
+
+        LoggerUtil.logInfo("Rent entry page successfully fetched!");
 
         return ResponseEntity.ok().body(convertRentEntry(rentEntry));
     }
@@ -88,6 +98,8 @@ public class RentEntryControllerImpl implements RentEntryController {
         if(allParams.isEmpty()) throw new InvalidArgumentsException("Invalid amount of params sent!");
 
         List<RentEntry> filteredRentEntries = rentService.filterRentEntries(allParams);
+
+        LoggerUtil.logInfo("List of filtered Rent entries successfully fetched!");
 
         return ResponseEntity.ok().body(convertRentEntryList(filteredRentEntries));
     }

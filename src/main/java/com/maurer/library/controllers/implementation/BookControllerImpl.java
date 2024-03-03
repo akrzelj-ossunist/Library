@@ -1,5 +1,6 @@
 package com.maurer.library.controllers.implementation;
 
+import com.maurer.library.aspect.LoggerUtil;
 import com.maurer.library.controllers.interfaces.BookController;
 import com.maurer.library.dtos.BookDto;
 import com.maurer.library.dtos.BookResDto;
@@ -40,6 +41,8 @@ public class BookControllerImpl implements BookController {
 
         Book createdBook = bookService.addBook(bookDto);
 
+        LoggerUtil.logInfo("New book created: " + createdBook.getTitle());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(convertBook(createdBook));
     }
 
@@ -48,6 +51,8 @@ public class BookControllerImpl implements BookController {
     public ResponseEntity<BookResDto> edit(@PathVariable("id") String bookId,@Valid @RequestBody BookUpdateDto bookUpdateDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
 
         Book updatedBook = bookService.updateBook(bookUpdateDto, bookId);
+
+        LoggerUtil.logInfo("Existing book updated: " + updatedBook.getTitle());
 
         return ResponseEntity.ok().body(convertBook(updatedBook));
 
@@ -59,6 +64,8 @@ public class BookControllerImpl implements BookController {
 
         boolean deleted = bookService.deleteBook(bookId);
 
+        LoggerUtil.logInfo("Book successfully deleted!");
+
         return ResponseEntity.ok().body(deleted);
     }
 
@@ -68,6 +75,8 @@ public class BookControllerImpl implements BookController {
 
         Book book = bookService.findBookById(bookId);
 
+        LoggerUtil.logInfo("Book page successfully fetched! " + book.getTitle());
+
         return ResponseEntity.ok().body(convertBook(book));
     }
 
@@ -76,6 +85,8 @@ public class BookControllerImpl implements BookController {
     public ResponseEntity<List<BookResDto>> list() {
 
         List<Book> books = bookService.findAllBooks();
+
+        LoggerUtil.logInfo("List of Books successfully fetched!");
 
         return ResponseEntity.ok().body(convertBookList(books));
     }
@@ -87,6 +98,8 @@ public class BookControllerImpl implements BookController {
         if(allParams.isEmpty()) throw new InvalidArgumentsException("Invalid amount of params sent!");
 
         List<Book> filteredBooks = bookService.filterBooks(allParams);
+
+        LoggerUtil.logInfo("List of filtered Books successfully fetched!");
 
         return ResponseEntity.ok().body(convertBookList(filteredBooks));
     }

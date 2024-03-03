@@ -1,4 +1,4 @@
-package com.maurer.library.aspect;
+package com.maurer.library.aspect.slf4j;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;

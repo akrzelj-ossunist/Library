@@ -1,5 +1,6 @@
 package com.maurer.library.controllers.implementation;
 
+import com.maurer.library.aspect.LoggerUtil;
 import com.maurer.library.controllers.interfaces.UserController;
 import com.maurer.library.dtos.*;
 import com.maurer.library.exceptions.*;
@@ -35,6 +36,9 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<UserResDto> register(@Valid @RequestBody UserDto userDto) throws EmailMismatchException, PasswordMismatchException, AlreadyExistException, InvalidArgumentsException {
 
         User newUser = userService.addUser(userDto);
+
+        LoggerUtil.logInfo("New User created: " + newUser.getFullName());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(convertUser(newUser));
     }
 
@@ -46,6 +50,8 @@ public class UserControllerImpl implements UserController {
 
         if(!userExists) throw new ObjectDoesntExistException("User doesn't exists!");
 
+        LoggerUtil.logInfo("User successfully logged in: " + userLoginDto.getEmail());
+
         return ResponseEntity.status(HttpStatus.FOUND).body(true);
     }
 
@@ -54,6 +60,8 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<UserResDto> edit(@PathVariable("id") String userId, @Valid @RequestBody UserUpdateDto userDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
 
         User updatedUser = userService.updateUser(userId, userDto);
+
+        LoggerUtil.logInfo("Existing User updated: " + updatedUser.getFullName());
 
         return ResponseEntity.status(HttpStatus.OK).body(convertUser(updatedUser));
     }
@@ -64,6 +72,8 @@ public class UserControllerImpl implements UserController {
 
         boolean deleted = userService.deleteUser(userId);
 
+        LoggerUtil.logInfo("User successfully deleted!");
+
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 
@@ -72,9 +82,11 @@ public class UserControllerImpl implements UserController {
     @PutMapping("/change-password/{id}")
     public ResponseEntity<Boolean> changePassword(@PathVariable("id") String userId, @Valid @RequestBody UserPasswordDto userPasswordDto) throws PasswordMismatchException, ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
 
-            userService.userChangePassword(userId, userPasswordDto);
+        userService.userChangePassword(userId, userPasswordDto);
 
-            return ResponseEntity.status(HttpStatus.OK).body(true);
+        LoggerUtil.logInfo("User successfully changed password!");
+
+        return ResponseEntity.status(HttpStatus.OK).body(true);
 
     }
 
@@ -86,6 +98,8 @@ public class UserControllerImpl implements UserController {
 
         if (userList.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
+        LoggerUtil.logInfo("List of Users successfully fetched!");
+
         return ResponseEntity.ok().body(convertUserList(userList));
     }
 
@@ -93,9 +107,11 @@ public class UserControllerImpl implements UserController {
     @GetMapping("/profile/{id}")
     public ResponseEntity<UserResDto> profile(@PathVariable("id") String userId) throws ObjectDoesntExistException, InvalidArgumentsException {
 
-            User userProfile = userService.findUserById(userId);
+        User userProfile = userService.findUserById(userId);
 
-            return ResponseEntity.ok().body(convertUser(userProfile));
+        LoggerUtil.logInfo("User profile successfully fetched!");
+
+        return ResponseEntity.ok().body(convertUser(userProfile));
 
     }
 
@@ -106,6 +122,8 @@ public class UserControllerImpl implements UserController {
         if(allParams.isEmpty()) throw new InvalidArgumentsException("Invalid amount of params sent!");
 
         List<User> filteredList = userService.filterUsers(allParams);
+
+        LoggerUtil.logInfo("List of filtered Users successfully fetched!");
 
         return ResponseEntity.ok().body(convertUserList(filteredList));
     }

@@ -1,5 +1,6 @@
 package com.maurer.library.controllers.implementation;
 
+import com.maurer.library.aspect.LoggerUtil;
 import com.maurer.library.controllers.interfaces.AuthorController;
 import com.maurer.library.dtos.AuthorDto;
 import com.maurer.library.dtos.AuthorResDto;
@@ -36,6 +37,8 @@ public class AuthorControllerImpl implements AuthorController {
 
         Author createdAuthor = authorService.addAuthor(authorDto);
 
+        LoggerUtil.logInfo("New author created: " + createdAuthor.getFullName());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(convertAuthor(createdAuthor));
 
     }
@@ -46,6 +49,8 @@ public class AuthorControllerImpl implements AuthorController {
 
         Author updatedAuthor = authorService.updateAuthor(authorId, authorDto);
 
+        LoggerUtil.logInfo("Existing author updated: " + updatedAuthor.getFullName());
+
         return ResponseEntity.ok().body(convertAuthor(updatedAuthor));
     }
 
@@ -54,6 +59,8 @@ public class AuthorControllerImpl implements AuthorController {
     public ResponseEntity<Boolean> delete(@PathVariable("id") String authorId) throws CannotDeleteException, ObjectDoesntExistException, InvalidArgumentsException, InvalidAuthorException {
 
         boolean deleted = authorService.deleteAuthor(authorId);
+
+        LoggerUtil.logInfo("Author successfully deleted!");
 
         return ResponseEntity.ok().body(deleted);
     }
@@ -64,6 +71,8 @@ public class AuthorControllerImpl implements AuthorController {
 
         Author author = authorService.findByAuthorId(authorId);
 
+        LoggerUtil.logInfo("Authors page successfully fetched! " + author.getFullName());
+
         return ResponseEntity.ok().body(convertAuthor(author));
     }
 
@@ -72,6 +81,8 @@ public class AuthorControllerImpl implements AuthorController {
     public ResponseEntity<List<AuthorResDto>> list() {
 
         List<Author> authors = authorService.findAllAuthors();
+
+        LoggerUtil.logInfo("List of Authors successfully fetched!");
 
         return ResponseEntity.ok().body(convertAuthorList(authors));
     }
@@ -83,6 +94,8 @@ public class AuthorControllerImpl implements AuthorController {
         if (allParams.isEmpty()) throw new InvalidArgumentsException("Sent arguments cannot be null!");
 
         List<Author> filteredAuthors = authorService.filterAuthors(allParams);
+
+        LoggerUtil.logInfo("List of filtered Authors successfully fetched!");
 
         return ResponseEntity.ok().body(convertAuthorList(filteredAuthors));
     }
