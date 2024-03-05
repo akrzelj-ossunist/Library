@@ -22,7 +22,7 @@ import static com.maurer.library.utils.ConvertModel.convertBook;
 import static com.maurer.library.utils.ConvertModel.convertBookList;
 
 @RestController
-@RequestMapping("/book")
+@RequestMapping("api/v1//book")
 @CrossOrigin
 public class BookControllerImpl implements BookController {
 

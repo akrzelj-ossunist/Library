@@ -18,7 +18,7 @@ import static com.maurer.library.utils.ConvertModel.convertUser;
 import static com.maurer.library.utils.ConvertModel.convertUserList;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("api/v1//user")
 @CrossOrigin
 public class UserControllerImpl implements UserController {
 

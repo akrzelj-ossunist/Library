@@ -19,7 +19,7 @@ import static com.maurer.library.utils.ConvertModel.convertAuthor;
 import static com.maurer.library.utils.ConvertModel.convertAuthorList;
 
 @RestController
-@RequestMapping("/author")
+@RequestMapping("/api/v1/author")
 @CrossOrigin
 public class AuthorControllerImpl implements AuthorController {
 

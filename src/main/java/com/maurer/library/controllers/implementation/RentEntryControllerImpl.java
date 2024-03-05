@@ -22,7 +22,7 @@ import static com.maurer.library.utils.ConvertModel.convertRentEntry;
 import static com.maurer.library.utils.ConvertModel.convertRentEntryList;
 
 @RestController
-@RequestMapping("/rent-entry")
+@RequestMapping("api/v1//rent-entry")
 @CrossOrigin
 public class RentEntryControllerImpl implements RentEntryController {
 
