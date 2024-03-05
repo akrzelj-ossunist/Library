@@ -13,6 +13,7 @@ import com.maurer.library.services.interfaces.RentService;
 import com.maurer.library.services.interfaces.UserService;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -23,10 +24,14 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final RentService rentService;
 
-    private RentService rentService;
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository,@Lazy RentService rentService) {
+        this.userRepository = userRepository;
+        this.rentService = rentService;
+    }
 
     @Override
     public User addUser(UserDto userDto) throws InvalidArgumentsException, AlreadyExistException, PasswordMismatchException, EmailMismatchException {

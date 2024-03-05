@@ -7,6 +7,7 @@ import com.maurer.library.repositories.AuthorRepository;
 import com.maurer.library.services.interfaces.AuthorService;
 import com.maurer.library.services.interfaces.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,12 +18,12 @@ import java.util.*;
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
-    @Autowired
-    private AuthorRepository authorRepository;
-
+    private final AuthorRepository authorRepository;
     private final BookService bookService;
 
-    public AuthorServiceImpl(BookService bookService) {
+    @Autowired
+    public AuthorServiceImpl(AuthorRepository authorRepository,@Lazy BookService bookService) {
+        this.authorRepository = authorRepository;
         this.bookService = bookService;
     }
 

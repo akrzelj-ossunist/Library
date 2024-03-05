@@ -25,12 +25,17 @@ import java.util.*;
 @Service
 public class RentServiceImpl implements RentService {
 
+    private final RentRepository rentRepository;
+    private final UserService userService;
+    private final BookService bookService;
+
     @Autowired
-    private RentRepository rentRepository;
+    public RentServiceImpl(RentRepository rentRepository, UserService userService, BookService bookService) {
+        this.rentRepository = rentRepository;
+        this.userService = userService;
+        this.bookService = bookService;
+    }
 
-    private UserService userService;
-
-    private BookService bookService;
 
     @Override
     public RentEntry rentBook(RentBookDto rentBookDto) throws ObjectDoesntExistException, InvalidArgumentsException, CurrentlyUnavailableException, AlreadyExistException {

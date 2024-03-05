@@ -25,9 +25,10 @@ CREATE TABLE IF NOT EXISTS Book (
 
 CREATE TABLE IF NOT EXISTS Rent (
     id char(36) NOT NULL PRIMARY KEY DEFAULT (UUID_GENERATE_V4()),
-    start_date TIMESTAMP NOT NULL,
-    end_date TIMESTAMP NOT NULL,
+    lending_date TIMESTAMP NOT NULL,
+    return_date TIMESTAMP NOT NULL,
     status VARCHAR(255) NOT NULL,
+    note VARCHAR(255) NOT NULL,
     users_id CHAR(36) NOT NULL,
     FOREIGN KEY (users_id) REFERENCES Users(id),
     book_id CHAR(36) NOT NULL,

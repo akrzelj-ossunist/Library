@@ -14,6 +14,7 @@ import com.maurer.library.services.interfaces.AuthorService;
 import com.maurer.library.services.interfaces.BookService;
 import com.maurer.library.services.interfaces.RentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -24,11 +25,16 @@ import java.util.*;
 @Service
 public class BookServiceImpl implements BookService {
 
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
+    private final AuthorService authorService;
+    private final RentService rentService;
 
-    private AuthorService authorService;
-    private RentService rentService;
+    @Autowired
+    public BookServiceImpl(BookRepository bookRepository, AuthorService authorService,@Lazy RentService rentService) {
+        this.bookRepository = bookRepository;
+        this.authorService = authorService;
+        this.rentService = rentService;
+    }
 
     @Override
     public Book addBook(BookDto bookDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
