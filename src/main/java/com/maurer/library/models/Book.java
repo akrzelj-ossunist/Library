@@ -38,7 +38,7 @@ public class Book {
     private String note;
 
     @Column(name = "created_date")
-    private Date createdDate;
+    private Date createdDate = new Date();
 
     @Column
     private String isbn;

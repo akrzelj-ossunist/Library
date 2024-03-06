@@ -2,6 +2,7 @@ package com.maurer.library.services.implementation;
 
 import com.maurer.library.dtos.AuthorDto;
 import com.maurer.library.exceptions.*;
+import com.maurer.library.mapper.DataMapper;
 import com.maurer.library.models.Author;
 import com.maurer.library.repositories.AuthorRepository;
 import com.maurer.library.services.interfaces.AuthorService;
@@ -19,11 +20,13 @@ import java.util.*;
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
+    private final DataMapper dataMapper;
     private final BookService bookService;
 
     @Autowired
-    public AuthorServiceImpl(AuthorRepository authorRepository,@Lazy BookService bookService) {
+    public AuthorServiceImpl(AuthorRepository authorRepository, DataMapper dataMapper, @Lazy BookService bookService) {
         this.authorRepository = authorRepository;
+        this.dataMapper = dataMapper;
         this.bookService = bookService;
     }
 
@@ -36,16 +39,7 @@ public class AuthorServiceImpl implements AuthorService {
         Author existingAuthor = findByFullName(authorDto.getFullName());
         if(existingAuthor != null) throw new AlreadyExistException("Author already exist in library!");
 
-        return authorRepository.save(createAuthor(authorDto));
-    }
-
-    public Author createAuthor(AuthorDto authorDto) {
-
-        return Author.builder()
-                .fullName(authorDto.getFullName())
-                .birthday(authorDto.getBirthday())
-                .build();
-
+        return authorRepository.save(dataMapper.dtoToAuthor(authorDto));
     }
 
     @Override

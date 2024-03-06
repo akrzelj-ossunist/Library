@@ -25,11 +25,11 @@ public class UserDto {
     private String emailRepeat;
 
     @NotBlank(message = "User password is mandatory")
-    @Pattern(regexp = "\"(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}\"")
+    //@Pattern(regexp = "\"(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}\"")
     private String password;
 
     @NotBlank(message = "Password repeat cannot be empty")
-    @Pattern(regexp = "\"(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}\"")
+    //@Pattern(regexp = "\"(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}\"")
     private String passwordRepeat;
 
     @NotBlank(message = "User address is mandatory")

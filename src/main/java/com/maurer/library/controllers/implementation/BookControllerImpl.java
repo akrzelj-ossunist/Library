@@ -7,6 +7,7 @@ import com.maurer.library.dtos.BookUpdateDto;
 import com.maurer.library.exceptions.AlreadyExistException;
 import com.maurer.library.exceptions.InvalidArgumentsException;
 import com.maurer.library.exceptions.ObjectDoesntExistException;
+import com.maurer.library.mapper.DataMapper;
 import com.maurer.library.models.Book;
 import com.maurer.library.services.interfaces.BookService;
 import jakarta.validation.Valid;
@@ -18,19 +19,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-import static com.maurer.library.utils.ConvertModel.convertBook;
-import static com.maurer.library.utils.ConvertModel.convertBookList;
-
 @RestController
-@RequestMapping("api/v1//book")
+@RequestMapping("/api/v1/book")
 @CrossOrigin
 public class BookControllerImpl implements BookController {
 
-
     private final BookService bookService;
+    private final DataMapper dataMapper;
 
     @Autowired
-    public BookControllerImpl(BookService bookService) {
+    public BookControllerImpl(DataMapper dataMapper, BookService bookService) {
+        this.dataMapper = dataMapper;
         this.bookService = bookService;
     }
 
@@ -40,7 +39,7 @@ public class BookControllerImpl implements BookController {
 
         Book createdBook = bookService.addBook(bookDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(convertBook(createdBook));
+        return ResponseEntity.status(HttpStatus.CREATED).body(dataMapper.bookToDto(createdBook));
     }
 
     @Override
@@ -49,7 +48,7 @@ public class BookControllerImpl implements BookController {
 
         Book updatedBook = bookService.updateBook(bookUpdateDto, bookId);
 
-        return ResponseEntity.ok().body(convertBook(updatedBook));
+        return ResponseEntity.ok().body(dataMapper.bookToDto(updatedBook));
 
     }
 
@@ -68,7 +67,7 @@ public class BookControllerImpl implements BookController {
 
         Book book = bookService.findBookById(bookId);
 
-        return ResponseEntity.ok().body(convertBook(book));
+        return ResponseEntity.ok().body(dataMapper.bookToDto(book));
     }
 
     @Override
@@ -77,7 +76,7 @@ public class BookControllerImpl implements BookController {
 
         List<Book> books = bookService.findAllBooks();
 
-        return ResponseEntity.ok().body(convertBookList(books));
+        return ResponseEntity.ok().body(dataMapper.listBookToListDto(books));
     }
 
     @Override
@@ -88,6 +87,6 @@ public class BookControllerImpl implements BookController {
 
         List<Book> filteredBooks = bookService.filterBooks(allParams);
 
-        return ResponseEntity.ok().body(convertBookList(filteredBooks));
+        return ResponseEntity.ok().body(dataMapper.listBookToListDto(filteredBooks));
     }
 }

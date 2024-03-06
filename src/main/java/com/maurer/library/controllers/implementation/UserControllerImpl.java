@@ -3,6 +3,7 @@ package com.maurer.library.controllers.implementation;
 import com.maurer.library.controllers.interfaces.UserController;
 import com.maurer.library.dtos.*;
 import com.maurer.library.exceptions.*;
+import com.maurer.library.mapper.DataMapper;
 import com.maurer.library.models.User;
 import com.maurer.library.services.interfaces.UserService;
 import jakarta.validation.Valid;
@@ -14,19 +15,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-import static com.maurer.library.utils.ConvertModel.convertUser;
-import static com.maurer.library.utils.ConvertModel.convertUserList;
-
 @RestController
-@RequestMapping("api/v1//user")
+@RequestMapping("/api/v1/user")
 @CrossOrigin
 public class UserControllerImpl implements UserController {
 
-
+    private final DataMapper dataMapper;
     private final UserService userService;
 
     @Autowired
-    public UserControllerImpl(UserService userService) {
+    public UserControllerImpl(DataMapper dataMapper, UserService userService) {
+        this.dataMapper = dataMapper;
         this.userService = userService;
     }
 
@@ -35,7 +34,7 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<UserResDto> register(@Valid @RequestBody UserDto userDto) throws EmailMismatchException, PasswordMismatchException, AlreadyExistException, InvalidArgumentsException {
 
         User newUser = userService.addUser(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(convertUser(newUser));
+        return ResponseEntity.status(HttpStatus.CREATED).body(dataMapper.userToDto(newUser));
     }
 
     @Override
@@ -55,7 +54,7 @@ public class UserControllerImpl implements UserController {
 
         User updatedUser = userService.updateUser(userId, userDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(convertUser(updatedUser));
+        return ResponseEntity.status(HttpStatus.OK).body(dataMapper.userToDto(updatedUser));
     }
 
     @Override
@@ -86,7 +85,7 @@ public class UserControllerImpl implements UserController {
 
         if (userList.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
-        return ResponseEntity.ok().body(convertUserList(userList));
+        return ResponseEntity.ok().body(dataMapper.listUserToListDto(userList));
     }
 
     @Override
@@ -95,7 +94,7 @@ public class UserControllerImpl implements UserController {
 
             User userProfile = userService.findUserById(userId);
 
-            return ResponseEntity.ok().body(convertUser(userProfile));
+            return ResponseEntity.ok().body(dataMapper.userToDto(userProfile));
 
     }
 
@@ -107,6 +106,6 @@ public class UserControllerImpl implements UserController {
 
         List<User> filteredList = userService.filterUsers(allParams);
 
-        return ResponseEntity.ok().body(convertUserList(filteredList));
+        return ResponseEntity.ok().body(dataMapper.listUserToListDto(filteredList));
     }
 }

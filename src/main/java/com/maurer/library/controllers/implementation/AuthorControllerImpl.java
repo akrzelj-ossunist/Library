@@ -4,6 +4,7 @@ import com.maurer.library.controllers.interfaces.AuthorController;
 import com.maurer.library.dtos.AuthorDto;
 import com.maurer.library.dtos.AuthorResDto;
 import com.maurer.library.exceptions.*;
+import com.maurer.library.mapper.DataMapper;
 import com.maurer.library.models.Author;
 import com.maurer.library.services.interfaces.AuthorService;
 import jakarta.validation.Valid;
@@ -15,19 +16,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-import static com.maurer.library.utils.ConvertModel.convertAuthor;
-import static com.maurer.library.utils.ConvertModel.convertAuthorList;
-
 @RestController
 @RequestMapping("/api/v1/author")
 @CrossOrigin
 public class AuthorControllerImpl implements AuthorController {
 
     private final AuthorService authorService;
+    private final DataMapper dataMapper;
 
     @Autowired
-    public AuthorControllerImpl(AuthorService authorService) {
+    public AuthorControllerImpl(AuthorService authorService, DataMapper dataMapper) {
         this.authorService = authorService;
+        this.dataMapper = dataMapper;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class AuthorControllerImpl implements AuthorController {
 
         Author createdAuthor = authorService.addAuthor(authorDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(convertAuthor(createdAuthor));
+        return ResponseEntity.status(HttpStatus.CREATED).body(dataMapper.authorToDto(createdAuthor));
 
     }
 
@@ -46,7 +46,7 @@ public class AuthorControllerImpl implements AuthorController {
 
         Author updatedAuthor = authorService.updateAuthor(authorId, authorDto);
 
-        return ResponseEntity.ok().body(convertAuthor(updatedAuthor));
+        return ResponseEntity.ok().body(dataMapper.authorToDto(updatedAuthor));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class AuthorControllerImpl implements AuthorController {
 
         Author author = authorService.findByAuthorId(authorId);
 
-        return ResponseEntity.ok().body(convertAuthor(author));
+        return ResponseEntity.ok().body(dataMapper.authorToDto(author));
     }
 
     @Override
@@ -73,7 +73,7 @@ public class AuthorControllerImpl implements AuthorController {
 
         List<Author> authors = authorService.findAllAuthors();
 
-        return ResponseEntity.ok().body(convertAuthorList(authors));
+        return ResponseEntity.ok().body(dataMapper.listAuthorToListDto(authors));
     }
 
     @Override
@@ -84,6 +84,6 @@ public class AuthorControllerImpl implements AuthorController {
 
         List<Author> filteredAuthors = authorService.filterAuthors(allParams);
 
-        return ResponseEntity.ok().body(convertAuthorList(filteredAuthors));
+        return ResponseEntity.ok().body(dataMapper.listAuthorToListDto(filteredAuthors));
     }
 }

@@ -14,8 +14,6 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name="users")
-@Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,6 +38,7 @@ public class User {
     @Column
     private Date birthday;
 
+    @Getter
     @Column
     @Enumerated(EnumType.STRING)
     private UserRole role;

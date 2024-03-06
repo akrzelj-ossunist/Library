@@ -7,6 +7,7 @@ import com.maurer.library.exceptions.AlreadyExistException;
 import com.maurer.library.exceptions.CurrentlyUnavailableException;
 import com.maurer.library.exceptions.InvalidArgumentsException;
 import com.maurer.library.exceptions.ObjectDoesntExistException;
+import com.maurer.library.mapper.DataMapper;
 import com.maurer.library.models.RentEntry;
 import com.maurer.library.services.interfaces.RentService;
 import jakarta.validation.Valid;
@@ -18,19 +19,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-import static com.maurer.library.utils.ConvertModel.convertRentEntry;
-import static com.maurer.library.utils.ConvertModel.convertRentEntryList;
-
 @RestController
-@RequestMapping("api/v1//rent-entry")
+@RequestMapping("/api/v1/rent-entry")
 @CrossOrigin
 public class RentEntryControllerImpl implements RentEntryController {
 
-
+    private final DataMapper dataMapper;
     private final RentService rentService;
 
     @Autowired
-    public RentEntryControllerImpl(RentService rentService) {
+    public RentEntryControllerImpl(DataMapper dataMapper, RentService rentService) {
+        this.dataMapper = dataMapper;
         this.rentService = rentService;
     }
 
@@ -44,7 +43,7 @@ public class RentEntryControllerImpl implements RentEntryController {
                     .build();
 
         RentEntry rentEntry = rentService.rentBook(rentBookDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(convertRentEntry(rentEntry));
+        return ResponseEntity.status(HttpStatus.CREATED).body(dataMapper.rentEntryToDto(rentEntry));
     }
 
     @Override
@@ -53,7 +52,7 @@ public class RentEntryControllerImpl implements RentEntryController {
 
         RentEntry returnedRentEntry = rentService.returnBook(rentEntryId, note);
 
-        return ResponseEntity.ok().body(convertRentEntry(returnedRentEntry));
+        return ResponseEntity.ok().body(dataMapper.rentEntryToDto(returnedRentEntry));
     }
 
     @Override
@@ -69,7 +68,7 @@ public class RentEntryControllerImpl implements RentEntryController {
 
         List<RentEntry> rentEntries = rentService.findAllRentEntries();
 
-        return ResponseEntity.ok().body(convertRentEntryList(rentEntries));
+        return ResponseEntity.ok().body(dataMapper.listRentToListDto(rentEntries));
     }
 
     @Override
@@ -78,7 +77,7 @@ public class RentEntryControllerImpl implements RentEntryController {
 
         RentEntry rentEntry = rentService.findRentEntryById(rentEntryId);
 
-        return ResponseEntity.ok().body(convertRentEntry(rentEntry));
+        return ResponseEntity.ok().body(dataMapper.rentEntryToDto(rentEntry));
     }
 
     @Override
@@ -89,6 +88,6 @@ public class RentEntryControllerImpl implements RentEntryController {
 
         List<RentEntry> filteredRentEntries = rentService.filterRentEntries(allParams);
 
-        return ResponseEntity.ok().body(convertRentEntryList(filteredRentEntries));
+        return ResponseEntity.ok().body(dataMapper.listRentToListDto(filteredRentEntries));
     }
 }

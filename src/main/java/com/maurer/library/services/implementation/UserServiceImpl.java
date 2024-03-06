@@ -5,6 +5,7 @@ import com.maurer.library.dtos.UserLoginDto;
 import com.maurer.library.dtos.UserPasswordDto;
 import com.maurer.library.dtos.UserUpdateDto;
 import com.maurer.library.exceptions.*;
+import com.maurer.library.mapper.DataMapper;
 import com.maurer.library.models.RentEntry;
 import com.maurer.library.models.User;
 import com.maurer.library.models.enums.UserRole;
@@ -27,10 +28,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RentService rentService;
 
+    private final DataMapper dataMapper;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository,@Lazy RentService rentService) {
+    public UserServiceImpl(UserRepository userRepository, @Lazy RentService rentService, DataMapper dataMapper) {
         this.userRepository = userRepository;
         this.rentService = rentService;
+        this.dataMapper = dataMapper;
     }
 
     @Override
@@ -46,20 +50,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> existingUser = userRepository.findByEmail(userDto.getEmail());
         if(existingUser.isPresent()) throw new AlreadyExistException("User already exist in library!");
 
-        return userRepository.save(createUser(userDto));
-    }
-
-    public User createUser(UserDto userDto) {
-
-        User user = User.builder().build();
-        user.setFullName(userDto.getFullName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(BCrypt.hashpw(userDto.getPassword(), BCrypt.gensalt(10)));
-        user.setBirthday(userDto.getBirthday());
-        user.setAddress(userDto.getAddress());
-        user.setRole(UserRole.USER);
-
-        return user;
+        return userRepository.save(dataMapper.dtoToUser(userDto));
     }
 
     @Override

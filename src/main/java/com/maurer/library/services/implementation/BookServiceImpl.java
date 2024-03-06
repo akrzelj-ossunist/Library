@@ -5,6 +5,7 @@ import com.maurer.library.dtos.BookUpdateDto;
 import com.maurer.library.exceptions.AlreadyExistException;
 import com.maurer.library.exceptions.InvalidArgumentsException;
 import com.maurer.library.exceptions.ObjectDoesntExistException;
+import com.maurer.library.mapper.DataMapper;
 import com.maurer.library.models.Author;
 import com.maurer.library.models.Book;
 import com.maurer.library.models.RentEntry;
@@ -27,12 +28,15 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final AuthorService authorService;
+
+    private final DataMapper dataMapper;
     private final RentService rentService;
 
     @Autowired
-    public BookServiceImpl(BookRepository bookRepository, AuthorService authorService,@Lazy RentService rentService) {
+    public BookServiceImpl(BookRepository bookRepository, AuthorService authorService, DataMapper dataMapper, @Lazy RentService rentService) {
         this.bookRepository = bookRepository;
         this.authorService = authorService;
+        this.dataMapper = dataMapper;
         this.rentService = rentService;
     }
 
@@ -43,20 +47,7 @@ public class BookServiceImpl implements BookService {
 
         if(findBookByTitle(bookDto.getTitle()) != null) throw new AlreadyExistException("Book you wanna add already exists!");
 
-        return bookRepository.save(createBook(bookDto));
-    }
-
-    public Book createBook(BookDto bookDto) throws InvalidArgumentsException, ObjectDoesntExistException {
-
-        return Book.builder()
-                .title(bookDto.getTitle())
-                .author(authorService.findByAuthorId(bookDto.getAuthor()))
-                .isAvilable(true)
-                .note(bookDto.getNote())
-                .isbn(bookDto.getIsbn())
-                .createdDate(new Date())
-                .genre(Genre.valueOf(bookDto.getGenre().toUpperCase()))
-                .build();
+        return bookRepository.save(dataMapper.dtoToBook(bookDto, authorService));
     }
 
     @Override
