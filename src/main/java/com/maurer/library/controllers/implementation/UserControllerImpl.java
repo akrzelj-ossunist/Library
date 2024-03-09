@@ -6,10 +6,13 @@ import com.maurer.library.exceptions.*;
 import com.maurer.library.mapper.DataMapper;
 import com.maurer.library.models.User;
 import com.maurer.library.services.interfaces.UserService;
+import com.maurer.library.utils.TokenGenerator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +25,9 @@ public class UserControllerImpl implements UserController {
 
     private final DataMapper dataMapper;
     private final UserService userService;
+
+    @Autowired
+    TokenGenerator tokenGenerator;
 
     @Autowired
     public UserControllerImpl(DataMapper dataMapper, UserService userService) {
@@ -39,13 +45,15 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PostMapping("/login")
-    public ResponseEntity<Boolean> login(@Valid @RequestBody UserLoginDto userLoginDto) throws ObjectDoesntExistException, InvalidArgumentsException {
+    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto userLoginDto, Authentication authentication) throws ObjectDoesntExistException, InvalidArgumentsException {
 
         boolean userExists = userService.validateLogin(userLoginDto);
 
         if(!userExists) throw new ObjectDoesntExistException("User doesn't exists!");
 
-        return ResponseEntity.status(HttpStatus.FOUND).body(true);
+        String jwtToken = tokenGenerator.generateToken(authentication);
+
+        return ResponseEntity.status(HttpStatus.FOUND).body(jwtToken);
     }
 
     @Override
@@ -59,6 +67,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> delete(@PathVariable("id") String userId) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
 
         boolean deleted = userService.deleteUser(userId);
@@ -79,6 +88,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @GetMapping("/list")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResDto>> list() {
 
         List<User> userList = userService.findAllUsers();
@@ -100,6 +110,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @GetMapping("/query")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResDto>> filterList(@RequestParam Map<String, String> allParams) throws InvalidArgumentsException {
 
         if(allParams.isEmpty()) throw new InvalidArgumentsException("Invalid amount of params sent!");

@@ -4,6 +4,7 @@ import com.maurer.library.dtos.*;
 import com.maurer.library.exceptions.*;
 import com.maurer.library.models.User;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public interface UserController {
      * Receives login info for user from client side and sends it to service side
      * In case user exists returns true if not returns bad request
      **/
-    ResponseEntity<Boolean> login(UserLoginDto userLoginDto) throws InvalidArgumentsException, ObjectDoesntExistException;
+    ResponseEntity<String> login(UserLoginDto userLoginDto, Authentication authentication) throws InvalidArgumentsException, ObjectDoesntExistException;
 
     /**
      * Receives info for user we want to edit from client side and sends it to service side

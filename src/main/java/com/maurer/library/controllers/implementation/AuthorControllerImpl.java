@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class AuthorControllerImpl implements AuthorController {
 
     @Override
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AuthorResDto> create(@Valid @RequestBody AuthorDto authorDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException, InvalidAuthorException {
 
         Author createdAuthor = authorService.addAuthor(authorDto);
@@ -42,6 +44,7 @@ public class AuthorControllerImpl implements AuthorController {
 
     @Override
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AuthorResDto> edit(@PathVariable("id") String authorId, @Valid @RequestBody AuthorDto authorDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException, InvalidAuthorException {
 
         Author updatedAuthor = authorService.updateAuthor(authorId, authorDto);
@@ -51,6 +54,7 @@ public class AuthorControllerImpl implements AuthorController {
 
     @Override
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> delete(@PathVariable("id") String authorId) throws CannotDeleteException, ObjectDoesntExistException, InvalidArgumentsException, InvalidAuthorException {
 
         boolean deleted = authorService.deleteAuthor(authorId);
