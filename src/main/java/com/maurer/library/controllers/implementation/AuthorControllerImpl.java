@@ -33,7 +33,7 @@ public class AuthorControllerImpl implements AuthorController {
 
     @Override
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<AuthorResDto> create(@Valid @RequestBody AuthorDto authorDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException, InvalidAuthorException {
 
         Author createdAuthor = authorService.addAuthor(authorDto);
@@ -44,7 +44,7 @@ public class AuthorControllerImpl implements AuthorController {
 
     @Override
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<AuthorResDto> edit(@PathVariable("id") String authorId, @Valid @RequestBody AuthorDto authorDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException, InvalidAuthorException {
 
         Author updatedAuthor = authorService.updateAuthor(authorId, authorDto);
@@ -54,7 +54,7 @@ public class AuthorControllerImpl implements AuthorController {
 
     @Override
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Boolean> delete(@PathVariable("id") String authorId) throws CannotDeleteException, ObjectDoesntExistException, InvalidArgumentsException, InvalidAuthorException {
 
         boolean deleted = authorService.deleteAuthor(authorId);

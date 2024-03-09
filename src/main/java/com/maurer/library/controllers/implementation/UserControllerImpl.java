@@ -45,13 +45,15 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto userLoginDto, Authentication authentication) throws ObjectDoesntExistException, InvalidArgumentsException {
+    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto userLoginDto) throws ObjectDoesntExistException, InvalidArgumentsException {
 
         boolean userExists = userService.validateLogin(userLoginDto);
 
         if(!userExists) throw new ObjectDoesntExistException("User doesn't exists!");
 
-        String jwtToken = tokenGenerator.generateToken(authentication);
+        User user = userService.findUserByEmail(userLoginDto.getEmail());
+
+        String jwtToken = tokenGenerator.generateToken(String.valueOf(user.getRole()), user.getFullName());
 
         return ResponseEntity.status(HttpStatus.FOUND).body(jwtToken);
     }
@@ -67,7 +69,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Boolean> delete(@PathVariable("id") String userId) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
 
         boolean deleted = userService.deleteUser(userId);
@@ -110,7 +112,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @GetMapping("/query")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<UserResDto>> filterList(@RequestParam Map<String, String> allParams) throws InvalidArgumentsException {
 
         if(allParams.isEmpty()) throw new InvalidArgumentsException("Invalid amount of params sent!");
@@ -119,4 +121,17 @@ public class UserControllerImpl implements UserController {
 
         return ResponseEntity.ok().body(dataMapper.listUserToListDto(filteredList));
     }
+
+
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    @GetMapping("/admin")
+    public String adminPage() {
+        return "This is admin page";
+    }
+
+    @GetMapping("/page")
+    public String userPage() {
+        return "This is user page";
+    }
 }
+

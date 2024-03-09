@@ -53,7 +53,7 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(
                 User.withUsername("antonio")
                         .password("{noop}password")
-                        .authorities("read")
+                        .authorities("ADMIN")
                         .build()
         );
     }

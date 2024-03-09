@@ -21,7 +21,7 @@ public interface UserController {
      * Receives login info for user from client side and sends it to service side
      * In case user exists returns true if not returns bad request
      **/
-    ResponseEntity<String> login(UserLoginDto userLoginDto, Authentication authentication) throws InvalidArgumentsException, ObjectDoesntExistException;
+    ResponseEntity<String> login(UserLoginDto userLoginDto) throws InvalidArgumentsException, ObjectDoesntExistException;
 
     /**
      * Receives info for user we want to edit from client side and sends it to service side

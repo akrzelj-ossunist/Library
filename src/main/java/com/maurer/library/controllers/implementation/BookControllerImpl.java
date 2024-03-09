@@ -36,7 +36,7 @@ public class BookControllerImpl implements BookController {
 
     @Override
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<BookResDto> create(@Valid @RequestBody BookDto bookDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
 
         Book createdBook = bookService.addBook(bookDto);
@@ -46,7 +46,7 @@ public class BookControllerImpl implements BookController {
 
     @Override
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<BookResDto> edit(@PathVariable("id") String bookId,@Valid @RequestBody BookUpdateDto bookUpdateDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
 
         Book updatedBook = bookService.updateBook(bookUpdateDto, bookId);
@@ -57,7 +57,7 @@ public class BookControllerImpl implements BookController {
 
     @Override
     @DeleteMapping("delete/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Boolean> delete(@PathVariable("id") String bookId) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException {
 
         boolean deleted = bookService.deleteBook(bookId);
