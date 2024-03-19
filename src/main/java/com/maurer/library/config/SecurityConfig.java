@@ -65,6 +65,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfiguration()))
                 .authorizeHttpRequests(auth -> {
+                    //auth.requestMatchers("/actuator/**", "/v2/api-docs","/swagger-ui").permitAll();
                     auth.anyRequest().permitAll();
                 })
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
