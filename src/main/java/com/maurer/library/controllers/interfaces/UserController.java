@@ -2,9 +2,7 @@ package com.maurer.library.controllers.interfaces;
 
 import com.maurer.library.dtos.*;
 import com.maurer.library.exceptions.*;
-import com.maurer.library.models.User;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 
 import java.util.List;
 import java.util.Map;
@@ -42,7 +40,7 @@ public interface UserController {
     ResponseEntity<Boolean> changePassword(String userId, UserPasswordDto userPasswordDto) throws InvalidArgumentsException, PasswordMismatchException, ObjectDoesntExistException, AlreadyExistException;
 
     /** Sends user list from server to client side **/
-    ResponseEntity<List<UserResDto>> list();
+    ResponseEntity<List<UserResDto>> list(Map<String, String> allParams);
 
     /** Takes user id from params and looks for user if exist send user to client side if not sends bad req **/
     ResponseEntity<UserResDto> profile(String userId) throws ObjectDoesntExistException, InvalidArgumentsException;

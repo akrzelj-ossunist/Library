@@ -6,6 +6,7 @@ import com.maurer.library.dtos.UserPasswordDto;
 import com.maurer.library.dtos.UserUpdateDto;
 import com.maurer.library.exceptions.*;
 import com.maurer.library.models.User;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,13 +38,13 @@ public interface UserService {
     public User findUserByEmail(String email) throws InvalidArgumentsException, ObjectDoesntExistException;
 
     /** Find all authors from library **/
-    public List<User> findAllUsers();
+    public Page<User> findAllUsers(Map<String, String> allParams);
 
     /** Changes existing user password **/
     public Boolean userChangePassword(String userId, UserPasswordDto userPasswordDto) throws PasswordMismatchException, InvalidArgumentsException, ObjectDoesntExistException, AlreadyExistException;
 
     /** filters list of objects with params we send **/
-    List<User> filterUsers(Map<String, String> allParams) throws InvalidArgumentsException;
+    Page<User> filterUsers(Map<String, String> allParams) throws InvalidArgumentsException;
 
 
 

@@ -15,6 +15,9 @@ import com.maurer.library.services.interfaces.UserService;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -120,9 +123,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUsers() {
+    public Page<User> findAllUsers(Map<String, String> allParams) {
 
-        return userRepository.findAll();
+        int page = allParams.get("page") != null ? Integer.parseInt(allParams.get("page")) - 1 : 0;
+        int size = allParams.get("size") != null ? Integer.parseInt(allParams.get("size")) : 10;
+
+        Pageable pageable = (Pageable) PageRequest.of(page, size);
+
+        return userRepository.findAll(pageable);
     }
 
     @Override
@@ -143,28 +151,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> filterUsers(Map<String, String> allParams) throws InvalidArgumentsException {
+    public Page<User> filterUsers(Map<String, String> allParams) throws InvalidArgumentsException {
 
-        if (allParams.isEmpty()) throw new InvalidArgumentsException("Sent arguments cannot be null!");
+        int page = allParams.get("page") != null ? Integer.parseInt(allParams.get("page")) - 1 : 0;
+        int size = allParams.get("size") != null ? Integer.parseInt(allParams.get("size")) : 10;
 
-        Set<User> filteredUsers = new HashSet<>(userRepository.findAll());
+        Pageable pageable = (Pageable) PageRequest.of(page, size);
 
-        allParams.forEach((key, value) -> {
-            switch (key) {
-                case "fullName":
-                    filteredUsers.retainAll(userRepository.findByFullName(value));
-                    break;
-                case "address":
-                    filteredUsers.retainAll(userRepository.findByAddress(value));
-                    break;
-                case "email":
-                    filteredUsers.retainAll(userRepository.findByEmail(value).stream().toList());
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        return new ArrayList<>(filteredUsers);
+        return userRepository.findByFullNameAndAddressAndEmail(allParams.get("fullName"), allParams.get("address"), allParams.get("email"), pageable);
     }
 }

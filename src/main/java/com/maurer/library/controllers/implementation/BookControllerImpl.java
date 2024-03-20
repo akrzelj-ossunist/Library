@@ -12,6 +12,7 @@ import com.maurer.library.models.Book;
 import com.maurer.library.services.interfaces.BookService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -76,21 +77,21 @@ public class BookControllerImpl implements BookController {
 
     @Override
     @GetMapping("/list")
-    public ResponseEntity<List<BookResDto>> list() {
+    public ResponseEntity<List<BookResDto>> list(@RequestParam Map<String, String> allParams) {
 
-        List<Book> books = bookService.findAllBooks();
+        Page<Book> books = bookService.findAllBooks(allParams);
 
-        return ResponseEntity.ok().body(dataMapper.listBookToListDto(books));
+        return ResponseEntity.ok().body(dataMapper.listBookToListDto(books.getContent()));
     }
 
     @Override
     @GetMapping("/query")
-    public ResponseEntity<List<BookResDto>> filterList(@RequestParam Map<String, String> allParams) throws InvalidArgumentsException {
+    public ResponseEntity<List<BookResDto>> filterList(@RequestParam Map<String, String> allParams) throws InvalidArgumentsException, ObjectDoesntExistException {
 
         if(allParams.isEmpty()) throw new InvalidArgumentsException("Invalid amount of params sent!");
 
-        List<Book> filteredBooks = bookService.filterBooks(allParams);
+        Page<Book> filteredBooks = bookService.filterBooks(allParams);
 
-        return ResponseEntity.ok().body(dataMapper.listBookToListDto(filteredBooks));
+        return ResponseEntity.ok().body(dataMapper.listBookToListDto(filteredBooks.getContent()));
     }
 }

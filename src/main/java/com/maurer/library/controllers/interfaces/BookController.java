@@ -35,8 +35,8 @@ public interface BookController {
     ResponseEntity<BookResDto> bookPage(String bookId) throws ObjectDoesntExistException, InvalidArgumentsException;
 
     /** Sends list of books from server to client side **/
-    ResponseEntity<List<BookResDto>> list();
+    ResponseEntity<List<BookResDto>> list(Map<String, String> allParams);
 
     /** Takes all params from link and filters all books then sends that list to client side **/
-    ResponseEntity<List<BookResDto>> filterList(Map<String, String> allParams) throws InvalidArgumentsException;
+    ResponseEntity<List<BookResDto>> filterList(Map<String, String> allParams) throws InvalidArgumentsException, ObjectDoesntExistException;
 }

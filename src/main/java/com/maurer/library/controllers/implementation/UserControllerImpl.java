@@ -9,6 +9,7 @@ import com.maurer.library.services.interfaces.UserService;
 import com.maurer.library.utils.TokenGenerator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -91,13 +92,13 @@ public class UserControllerImpl implements UserController {
     @Override
     @GetMapping("/list")
     //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserResDto>> list() {
+    public ResponseEntity<List<UserResDto>> list(@RequestParam Map<String, String> allParams) {
 
-        List<User> userList = userService.findAllUsers();
+        Page<User> userList = userService.findAllUsers(allParams);
 
         if (userList.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
-        return ResponseEntity.ok().body(dataMapper.listUserToListDto(userList));
+        return ResponseEntity.ok().body(dataMapper.listUserToListDto(userList.getContent()));
     }
 
     @Override
@@ -112,26 +113,13 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @GetMapping("/query")
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    //@PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<UserResDto>> filterList(@RequestParam Map<String, String> allParams) throws InvalidArgumentsException {
 
-        if(allParams.isEmpty()) throw new InvalidArgumentsException("Invalid amount of params sent!");
+        Page<User> filteredList = userService.filterUsers(allParams);
 
-        List<User> filteredList = userService.filterUsers(allParams);
-
-        return ResponseEntity.ok().body(dataMapper.listUserToListDto(filteredList));
+        return ResponseEntity.ok().body(dataMapper.listUserToListDto(filteredList.getContent()));
     }
 
-
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    @GetMapping("/admin")
-    public String adminPage() {
-        return "This is admin page";
-    }
-
-    @GetMapping("/page")
-    public String userPage() {
-        return "This is user page";
-    }
 }
 

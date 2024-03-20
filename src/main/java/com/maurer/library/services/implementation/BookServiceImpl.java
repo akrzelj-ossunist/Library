@@ -16,6 +16,9 @@ import com.maurer.library.services.interfaces.BookService;
 import com.maurer.library.services.interfaces.RentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -109,8 +112,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> findAllBooks() {
-        return bookRepository.findAll();
+    public Page<Book> findAllBooks(Map<String, String> allParams) {
+        int page = allParams.get("page") != null ? Integer.parseInt(allParams.get("page")) - 1 : 0;
+        int size = allParams.get("size") != null ? Integer.parseInt(allParams.get("size")) : 10;
+
+        Pageable pageable = (Pageable) PageRequest.of(page, size);
+        return bookRepository.findAll(pageable);
     }
 
     @Override
@@ -158,39 +165,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> filterBooks(Map<String, String> allParams) throws InvalidArgumentsException {
+    public Page<Book> filterBooks(Map<String, String> allParams) throws InvalidArgumentsException, ObjectDoesntExistException {
 
-        if(allParams.isEmpty()) throw new InvalidArgumentsException("No filter parameters provided!");
 
-        Set<Book> filteredBooks = new HashSet<>(bookRepository.findAll());
+        int page = allParams.get("page") != null ? Integer.parseInt(allParams.get("page")) - 1 : 0;
+        int size = allParams.get("size") != null ? Integer.parseInt(allParams.get("size")) : 10;
 
-        allParams.forEach((key, value) -> {
-            switch (key) {
-                case "title":
-                    filteredBooks.retainAll(bookRepository.findByTitle(value).stream().toList());
-                    break;
-                case "author":
-                    try {
-                        filteredBooks.retainAll(bookRepository.findByAuthor(authorService.findByFullName(value)));
-                    } catch (InvalidArgumentsException | ObjectDoesntExistException e) {
-                        throw new RuntimeException(e);
-                    }
-                    break;
-                case "available":
-                    filteredBooks.retainAll(bookRepository.findByIsAvilable(Objects.equals(value, "available")));
-                    break;
-                case "isbn":
-                    filteredBooks.retainAll(bookRepository.findByIsbn(value).stream().toList());
-                    break;
-                case "genre":
-                    filteredBooks.retainAll(bookRepository.findByGenre(value.toUpperCase()));
-                    break;
-                default:
-                    break;
-            }
-        });
+        Pageable pageable = (Pageable) PageRequest.of(page, size);
 
-        return new ArrayList<>(filteredBooks);
+        String title = allParams.get("title");
+        String isbn = allParams.get("isbn");
+        Author author = authorService.findByFullName(allParams.get("author"));
+        Genre genre = Genre.valueOf(allParams.get("genre"));
+        Boolean isAvailable = Boolean.valueOf(allParams.get("available"));
 
+        return bookRepository.findByTitleAndAuthorAndIsAvailableAndIsbnAndGenre(title, author, isAvailable, isbn, genre, pageable);
     }
 }

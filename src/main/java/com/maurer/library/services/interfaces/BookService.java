@@ -6,6 +6,7 @@ import com.maurer.library.exceptions.AlreadyExistException;
 import com.maurer.library.exceptions.InvalidArgumentsException;
 import com.maurer.library.exceptions.ObjectDoesntExistException;
 import com.maurer.library.models.Book;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public interface BookService {
     List<Book> findAvailableBooks() throws InvalidArgumentsException;
 
     /** Returns list of books **/
-    List<Book> findAllBooks();
+    Page<Book> findAllBooks(Map<String, String> allParams);
 
     /** Filters list of books by there genre **/
     List<Book> findBooksByGenre(String genre) throws InvalidArgumentsException;
@@ -45,5 +46,5 @@ public interface BookService {
     /** Updates current availability of the book **/
     Book updateIsAvailable(Boolean status, String bookId) throws InvalidArgumentsException, ObjectDoesntExistException, AlreadyExistException;
 
-    List<Book> filterBooks(Map<String, String> allParams) throws InvalidArgumentsException;
+    Page<Book> filterBooks(Map<String, String> allParams) throws InvalidArgumentsException, ObjectDoesntExistException;
 }
