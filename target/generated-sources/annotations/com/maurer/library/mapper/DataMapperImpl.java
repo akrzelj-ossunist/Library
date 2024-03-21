@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-20T01:49:57+0100",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
+    date = "2024-03-21T11:38:25+0100",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.2 (Private Build)"
 )
 @Component
 public class DataMapperImpl implements DataMapper {

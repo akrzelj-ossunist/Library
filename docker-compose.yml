@@ -1,0 +1,22 @@
+version: '3'
+services:
+  your-service:
+    image: antonio-library
+    environment:
+      - SECURITY_PASS=antonio123
+    ports:
+      - "8080:8080"  # Adjust the port mapping as needed
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: Postgres1234
+    ports:
+      - "5432:5432"
+
+  dbeaver:
+    image: dbeaver/dbeaver-ce:latest
+    depends_on:
+      - postgres
+    ports:
+      - "127.0.0.1:8080:8080"
