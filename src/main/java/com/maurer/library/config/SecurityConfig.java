@@ -40,8 +40,8 @@ public class SecurityConfig {
 
     private final RsaKeyProperties rsaKeyProperties;
 
-    @Value("${frontend.url}")
-    private String frontendUrl;
+    //@Value("${frontend.url}")
+    private String frontendUrl = "";
 
     public SecurityConfig(RsaKeyProperties rsaKeyProperties) {
         this.rsaKeyProperties = rsaKeyProperties;

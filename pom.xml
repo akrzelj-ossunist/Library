@@ -119,7 +119,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring.boot.version}</version>
 				<configuration>
 					<excludes>
 						<exclude>
@@ -138,12 +137,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-
-			<!-- docker plugin -->
-			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
 			</plugin>
 
 			<plugin>

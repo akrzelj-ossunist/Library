@@ -14,8 +14,8 @@ import java.io.IOException;
 @Component
 public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    @Value("${frontend.url}")
-    private String frontendUrl;
+    //@Value("${frontend.url}")
+    private String frontendUrl = "";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {

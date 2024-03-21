@@ -1,0 +1,55 @@
+1. install wsl
+	-wsl --install -d ubuntu
+	-wsl --update
+	-wsl --ser-default-version 2
+
+2. launch wsl with command wsl in cmd
+	-go root mode(sudo su)
+
+3. install docker
+	-sudo wget -qO - https://bonguides.com/docker | bash
+
+4. install postgres for docker
+	-docker pull postgres
+	-Command for creating simple postgres database for docker
+		-docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin -e POSTGRES_DB=library --name=postgres_con postgres
+	-check if db is up(docker ps)
+
+Setup simple docker in spring boot docker:
+
+1. create Dockerfile
+	FROM openjdk:21(21 is my version if you r using different one change it)
+	USER root
+	COPY target/*.jar app.jar
+	ENTRYPOINT ["java", "-jar", "/app.jar"]
+
+2. make sure pom file have path to main file
+	<plugin>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-maven-plugin</artifactId>
+		<configuration>
+			<excludes>
+				<exclude>
+					<groupId>org.projectlombok</groupId>
+					<artifactId>lombok</artifactId>
+				</exclude>
+			</excludes>
+			<mainClass>com.java.example.ExampleApplication</mainClass>(path to your app)
+			<layout>JAR</layout>
+		</configuration>
+		<executions>
+			<execution>
+				<goals>
+					<goal>build-info</goal>
+					<goal>repackage</goal>
+				</goals>
+			</execution>
+		</executions>
+	</plugin>
+
+3. Start your docekrized spring app
+	-mvn clean package
+	-docker build -t name-of-your-image-file:latest .
+	-docker images(can see if u created image)
+	-docker run -p 8080:8080 name-of-your-image-file
+
