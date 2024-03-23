@@ -11,19 +11,58 @@
 
 4. install postgres for docker
 	-docker pull postgres
-	-Command for creating simple postgres database for docker
-		-docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin -e POSTGRES_DB=library --name=postgres_con postgres
-	-check if db is up(docker ps)
 
 Setup simple docker in spring boot docker:
 
 1. create Dockerfile
-	FROM openjdk:21(21 is my version if you r using different one change it)
+	FROM openjdk:21 (21 is my version if you are using different one change it)
 	USER root
 	COPY target/*.jar app.jar
 	ENTRYPOINT ["java", "-jar", "/app.jar"]
 
-2. make sure pom file have path to main file
+2. create docker-compose.yml file
+      version: '3'
+      services:
+        your-service:
+          image: antonio-library (name of the image you wanna create)
+          environment:
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/library (db is tag beneath and library is database you wanna connect to)
+            - SPRING_DATASOURCE_USERNAME=admin (any username you want)
+            - SPRING_DATASOURCE_PASSWORD=admin (any password you want)
+            - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+          ports:
+            - "8081:8080"  # Adjust the port mapping as needed
+          depends_on:
+            - db
+
+        db:
+          image: postgres:latest
+          container_name: db
+          environment:
+            POSTGRES_PASSWORD: admin
+            POSTGRES_USER: admin
+            POSTGRES_DB: library
+          ports:
+            - "5432:5432"
+          volumes:
+            - library_data:/var/lib/postgresql/data (where database info will be saved locally)
+
+        cloudbeaver:
+          image: dbeaver/cloudbeaver:latest
+          restart: always
+          container_name: cloudbeaver
+          volumes:
+            - library_dbeaver_data:/opt/cloudbeaver/workspace
+          ports:
+            - "8978:8978" (dont change anything about cloudbeaver)
+      volumes:
+        library_data:
+          driver: local
+        library_dbeaver_data:
+          driver: local
+
+
+3. make sure pom file have path to main file
 	<plugin>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-maven-plugin</artifactId>
@@ -51,5 +90,6 @@ Setup simple docker in spring boot docker:
 	-mvn clean package
 	-docker build -t name-of-your-image-file:latest .
 	-docker images(can see if u created image)
-	-docker run -p 8080:8080 name-of-your-image-file
+	-docker-compose up
+	-docker-compose down (when you close app to remove containers)
 

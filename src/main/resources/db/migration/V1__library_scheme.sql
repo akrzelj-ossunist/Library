@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS Users (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL,
-    birthday VARCHAR(255) NOT NULL,
+    birthday TIMESTAMP NOT NULL,
     role VARCHAR(255) NOT NULL
 );
 

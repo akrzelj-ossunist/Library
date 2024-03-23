@@ -1,22 +1,39 @@
-version: '3'
-services:
-  your-service:
-    image: antonio-library
-    environment:
-      - SECURITY_PASS=antonio123
-    ports:
-      - "8080:8080"  # Adjust the port mapping as needed
-  postgres:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: Postgres1234
-    ports:
-      - "5432:5432"
+  version: '3'
+  services:
+    your-service:
+      image: antonio-library
+      environment:
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/library
+        - SPRING_DATASOURCE_USERNAME=admin
+        - SPRING_DATASOURCE_PASSWORD=admin
+        - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      ports:
+        - "8081:8080"  # Adjust the port mapping as needed
+      depends_on:
+        - db
 
-  dbeaver:
-    image: dbeaver/dbeaver-ce:latest
-    depends_on:
-      - postgres
-    ports:
-      - "127.0.0.1:8080:8080"
+    db:
+      image: postgres:latest
+      container_name: db
+      environment:
+        POSTGRES_PASSWORD: admin
+        POSTGRES_USER: admin
+        POSTGRES_DB: library
+      ports:
+        - "5432:5432"
+      volumes:
+        - library_data:/var/lib/postgresql/data
+
+    cloudbeaver:
+      image: dbeaver/cloudbeaver:latest
+      restart: always
+      container_name: cloudbeaver
+      volumes:
+        - library_dbeaver_data:/opt/cloudbeaver/workspace
+      ports:
+        - "8978:8978"
+  volumes:
+    library_data:
+      driver: local
+    library_dbeaver_data:
+      driver: local
