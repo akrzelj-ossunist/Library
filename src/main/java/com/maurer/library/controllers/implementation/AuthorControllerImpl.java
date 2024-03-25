@@ -73,9 +73,9 @@ public class AuthorControllerImpl implements AuthorController {
 
     @Override
     @GetMapping("/list")
-    public ResponseEntity<List<AuthorResDto>> list() {
+    public ResponseEntity<List<AuthorResDto>> list(@RequestParam Map<String, String> allParams) {
 
-        List<Author> authors = authorService.findAllAuthors();
+        List<Author> authors = authorService.findAllAuthors(allParams);
 
         return ResponseEntity.ok().body(dataMapper.listAuthorToListDto(authors));
     }

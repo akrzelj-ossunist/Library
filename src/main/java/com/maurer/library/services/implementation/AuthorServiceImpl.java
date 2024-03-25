@@ -9,6 +9,8 @@ import com.maurer.library.services.interfaces.AuthorService;
 import com.maurer.library.services.interfaces.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -97,28 +99,24 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> findAllAuthors() {
+    public List<Author> findAllAuthors(Map<String, String> allParams) {
 
-        return authorRepository.findAll();
+        int page = allParams.get("page") != null ? Integer.parseInt(allParams.get("page")) - 1 : 0;
+        int size = allParams.get("size") != null ? Integer.parseInt(allParams.get("size")) : 10;
+
+        Pageable pageable = (Pageable) PageRequest.of(page, size);
+
+        return authorRepository.findAll(pageable).getContent();
     }
 
     @Override
     public List<Author> filterAuthors(Map<String, String> allParams) throws InvalidArgumentsException {
 
-        if(allParams.isEmpty()) throw new InvalidArgumentsException("No filter parameters provided!");
+        int page = allParams.get("page") != null ? Integer.parseInt(allParams.get("page")) - 1 : 0;
+        int size = allParams.get("size") != null ? Integer.parseInt(allParams.get("size")) : 10;
 
-        Set<Author> filteredAuthors = new HashSet<>(authorRepository.findAll());
+        Pageable pageable = (Pageable) PageRequest.of(page, size);
 
-        allParams.forEach((key, value) -> {
-            switch (key) {
-                case "fullName":
-                    filteredAuthors.retainAll(authorRepository.findByFullName(value).stream().toList());
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        return new ArrayList<>(filteredAuthors);
+        return authorRepository.findByFullName(allParams.get("fullName"), pageable).getContent();
     }
 }

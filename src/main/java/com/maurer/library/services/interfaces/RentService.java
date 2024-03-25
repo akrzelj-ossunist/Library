@@ -4,6 +4,8 @@ import com.maurer.library.dtos.RentBookDto;
 import com.maurer.library.exceptions.*;
 import com.maurer.library.models.RentEntry;
 import com.maurer.library.models.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -28,14 +30,14 @@ public interface RentService {
     List<RentEntry> findRentsByBookId(String bookId) throws InvalidArgumentsException, ObjectDoesntExistException;
 
     /** Returns list of all rent entries **/
-    List<RentEntry> findAllRentEntries();
+    List<RentEntry> findAllRentEntries(Map<String, String> allParams);
 
     /** Filtrates all rent entries by status **/
     List<RentEntry> findAllRentEntriesByStatus(String status) throws InvalidArgumentsException, InvalidEnumException;
 
     /** Looks up all current rent entries and if some rent is older than 30 days, status of that rent entry changes to expired **/
-    void setExpiredRentEntries();
+    public List<RentEntry> setExpiredRentEntries(List<RentEntry> rentEntryList);
 
     /** Checks for expired entries and then filters list of objects with params we send **/
-    List<RentEntry> filterRentEntries(Map<String, String> allParams) throws InvalidArgumentsException;
+    List<RentEntry> filterRentEntries(Map<String, String> allParams) throws InvalidArgumentsException, ObjectDoesntExistException;
 }

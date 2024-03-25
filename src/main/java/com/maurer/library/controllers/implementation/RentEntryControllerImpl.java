@@ -12,6 +12,7 @@ import com.maurer.library.models.RentEntry;
 import com.maurer.library.services.interfaces.RentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -65,9 +66,9 @@ public class RentEntryControllerImpl implements RentEntryController {
 
     @Override
     @GetMapping("/list")
-    public ResponseEntity<List<RentEntryResDto>> list() {
+    public ResponseEntity<List<RentEntryResDto>> list(@RequestParam Map<String, String> allParams) {
 
-        List<RentEntry> rentEntries = rentService.findAllRentEntries();
+        List<RentEntry> rentEntries = rentService.findAllRentEntries(allParams);
 
         return ResponseEntity.ok().body(dataMapper.listRentToListDto(rentEntries));
     }
@@ -83,7 +84,7 @@ public class RentEntryControllerImpl implements RentEntryController {
 
     @Override
     @GetMapping("/query")
-    public ResponseEntity<List<RentEntryResDto>> filterList(@RequestParam Map<String, String> allParams) throws InvalidArgumentsException {
+    public ResponseEntity<List<RentEntryResDto>> filterList(@RequestParam Map<String, String> allParams) throws InvalidArgumentsException, ObjectDoesntExistException {
 
         if(allParams.isEmpty()) throw new InvalidArgumentsException("Invalid amount of params sent!");
 

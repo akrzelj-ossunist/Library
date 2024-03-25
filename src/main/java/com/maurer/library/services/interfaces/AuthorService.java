@@ -29,11 +29,10 @@ public interface AuthorService {
     /** Find author from library bz his id **/
     public Author findByAuthorId(String authorId) throws InvalidArgumentsException, ObjectDoesntExistException;
 
-    /** Find author by his name **/
-    public Author findByFullName(String fullName) throws InvalidArgumentsException, ObjectDoesntExistException;
+    Author findByFullName(String fullName) throws InvalidArgumentsException, ObjectDoesntExistException;
 
     /** Find all authors from library **/
-    public List<Author> findAllAuthors();
+    public List<Author> findAllAuthors(Map<String, String> allParams);
 
     List<Author> filterAuthors(Map<String, String> allParams) throws InvalidArgumentsException;
 

@@ -11,8 +11,12 @@ import com.maurer.library.services.interfaces.BookService;
 import com.maurer.library.services.interfaces.RentService;
 import com.maurer.library.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
@@ -107,11 +111,16 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
-    public List<RentEntry> findAllRentEntries() {
+    public List<RentEntry> findAllRentEntries(Map<String, String> allParams) {
 
-        setExpiredRentEntries();
+        int page = allParams.get("page") != null ? Integer.parseInt(allParams.get("page")) - 1 : 0;
+        int size = allParams.get("size") != null ? Integer.parseInt(allParams.get("size")) : 10;
 
-        return rentRepository.findAll();
+        Pageable pageable = (Pageable) PageRequest.of(page, size);
+
+        List<RentEntry> rentEntryList = rentRepository.findAll(pageable).getContent();
+
+        return setExpiredRentEntries(rentEntryList);
     }
 
     @Override
@@ -119,15 +128,13 @@ public class RentServiceImpl implements RentService {
 
         if(status == null) throw new InvalidArgumentsException("Entered status cannot be null");
 
-        setExpiredRentEntries();
-
         return rentRepository.findByStatus(status);
     }
 
     @Override
-    public void setExpiredRentEntries() {
+    public List<RentEntry> setExpiredRentEntries(List<RentEntry> rentEntryList) {
 
-        List<RentEntry> rentEntryList = rentRepository.findAll();
+        List<RentEntry> rentEntryListChecked = new ArrayList<>();
 
         rentEntryList.forEach(entry -> {
 
@@ -145,56 +152,47 @@ public class RentServiceImpl implements RentService {
             // Check if the difference is greater than 30 days and status is not already expired
             if(daysDifference > 30 && entry.getStatus() != Status.EXPIRED) {
               entry.setStatus(Status.EXPIRED);
-                rentRepository.save(entry);
+              rentRepository.save(entry);
+              rentEntryListChecked.add(entry);
             }
         });
+        return  rentEntryListChecked;
     }
 
-    public List<RentEntry> filterRentEntries(Map<String, String> allParams) throws InvalidArgumentsException {
+    public List<RentEntry> filterRentEntries(Map<String, String> allParams) throws ObjectDoesntExistException, InvalidArgumentsException {
 
-        if(allParams.isEmpty()) throw new InvalidArgumentsException("No filter parameters provided!");
+        int page = allParams.get("page") != null ? Integer.parseInt(allParams.get("page")) - 1 : 0;
+        int size = allParams.get("size") != null ? Integer.parseInt(allParams.get("size")) : 10;
 
-        Set<RentEntry> filteredRents = new HashSet<>(rentRepository.findAll());
+        Pageable pageable = (Pageable) PageRequest.of(page, size);
 
-        allParams.forEach((key, value) -> {
-            switch (key) {
-                case "userId":
-                    try {
-                        filteredRents.retainAll(rentRepository.findByUser(userService.findUserById(value)));
-                    } catch (InvalidArgumentsException | ObjectDoesntExistException e) {
-                        throw new RuntimeException(e);
-                    }
-                    break;
-                case "bookId":
-                    try {
-                        filteredRents.retainAll(rentRepository.findByBook(bookService.findBookByTitle(value)));
-                    } catch (InvalidArgumentsException | ObjectDoesntExistException e) {
-                        throw new RuntimeException(e);
-                    }
-                    break;
-                case "status":
-                    filteredRents.retainAll(rentRepository.findByStatus(value));
-                    break;
-                case "lendingDate":
-                    filteredRents.retainAll(rentRepository.findByLendingDate(isValid(value)));
-                    break;
-                case "returnDate":
-                    filteredRents.retainAll(rentRepository.findByReturnDate(isValid(value)));
-                    break;
-                default:
-                    break;
-            }
-        });
+        User user = userService.findUserById(allParams.get("user"));
 
-        return new ArrayList<>(filteredRents);
-    }
+        Book book = bookService.findBookByTitle(allParams.get("book"));
 
-    public static Date isValid(String dateStr) {
+        String status = allParams.get("status");
+
+        String lendingDateString = allParams.get("lendingDate");
+        String returnDateString = allParams.get("returnDate");
+
+        // Convert string representations to Date objects
+        Date lendingDate = null;
+        Date returnDate = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // You can change the format as per your input
+
         try {
-            LocalDate localDate = LocalDate.parse(dateStr);
-            return java.sql.Date.valueOf(localDate);
-        } catch (DateTimeParseException e) {
-            return null;
+            if (lendingDateString != null) {
+                lendingDate = dateFormat.parse(lendingDateString);
+            }
+            if (returnDateString != null) {
+                returnDate = dateFormat.parse(returnDateString);
+            }
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
         }
+
+        List<RentEntry> rentEntryList = rentRepository.findByUserAndBookAndStatusAndLendingDateAndReturnDate(user, book, status, lendingDate, returnDate, pageable).getContent();
+
+        return setExpiredRentEntries(rentEntryList);
     }
 }

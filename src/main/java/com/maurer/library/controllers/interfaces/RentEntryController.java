@@ -31,11 +31,11 @@ public interface RentEntryController {
     Boolean delete(String rentEntryId) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException;
 
     /** Sends rent entry list from server to client side **/
-    ResponseEntity<List<RentEntryResDto>> list();
+    ResponseEntity<List<RentEntryResDto>> list(Map<String, String> allParams);
 
     /** Takes rent entry id from params and looks for rent entry, if exist send rent entry to client side if not sends bad req **/
     ResponseEntity<RentEntryResDto> rentEntryPage(String rentEntryId) throws ObjectDoesntExistException, InvalidArgumentsException;
 
     /** Takes all params from link and filters all rent entries then sends that list to client side **/
-    ResponseEntity<List<RentEntryResDto>> filterList(Map<String, String> allParams) throws InvalidArgumentsException;
+    ResponseEntity<List<RentEntryResDto>> filterList(Map<String, String> allParams) throws InvalidArgumentsException, ObjectDoesntExistException;
 }

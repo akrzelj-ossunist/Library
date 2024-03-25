@@ -33,7 +33,7 @@ public interface AuthorController {
     ResponseEntity<AuthorResDto> authorProfile(String authorId) throws ObjectDoesntExistException, InvalidArgumentsException;
 
     /** Sends list of authors from server to client side **/
-    ResponseEntity<List<AuthorResDto>> list();
+    ResponseEntity<List<AuthorResDto>> list(Map<String, String> allParams);
 
     /** Takes all params from link and filters all authors then sends that list to client side **/
     ResponseEntity<List<AuthorResDto>> filterList(Map<String, String> allParams) throws InvalidArgumentsException;
