@@ -24,6 +24,7 @@ com\maurer\library\repositories\UserRepository.class
 com\maurer\library\services\interfaces\RentService.class
 com\maurer\library\models\enums\UserRole.class
 com\maurer\library\dtos\UserResDto$UserResDtoBuilder.class
+com\maurer\library\dtos\AuthorDto$AuthorDtoBuilder.class
 com\maurer\library\controllers\implementation\BookControllerImpl.class
 com\maurer\library\exceptions\PasswordMismatchException.class
 com\maurer\library\services\interfaces\BookService.class
@@ -36,8 +37,10 @@ com\maurer\library\controllers\interfaces\AuthorController.class
 com\maurer\library\dtos\UserDto$UserDtoBuilder.class
 com\maurer\library\dtos\UserUpdateDto$UserUpdateDtoBuilder.class
 com\maurer\library\dtos\UserUpdateDto.class
+com\maurer\library\dtos\BookUpdateDto$BookUpdateDtoBuilder.class
 com\maurer\library\dtos\BookResDto$BookResDtoBuilder.class
 com\maurer\library\mapper\DataMapperImpl.class
+com\maurer\library\dtos\BookDto$BookDtoBuilder.class
 com\maurer\library\dtos\UserPasswordDto.class
 com\maurer\library\models\enums\RegistrationSource.class
 com\maurer\library\controllers\implementation\AuthorControllerImpl.class
