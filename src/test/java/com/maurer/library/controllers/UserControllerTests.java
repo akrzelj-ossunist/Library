@@ -41,7 +41,6 @@ public class UserControllerTests {
     private DataMapper dataMapper;
     @Autowired
     private ObjectMapper objectMapper;
-
     private UserDto userDto;
     private User user;
     private UserResDto userResDto;
@@ -49,39 +48,13 @@ public class UserControllerTests {
 
     @BeforeEach
     public void init() {
-        userDto = UserDto.builder()
-                .fullName("John Doe")
-                .email("john@example.com")
-                .emailRepeat("john@example.com")
-                .password("password")
-                .passwordRepeat("password")
-                .address("123 Street")
-                .birthday(new Date())
-                .build();
+        userDto = UserDto.builder().fullName("John Doe").email("john@example.com").emailRepeat("john@example.com").password("password").passwordRepeat("password").address("123 Street").birthday(new Date()).build();
 
-        userUpdateDto = UserUpdateDto.builder()
-                .fullName("Johnny Doe")
-                .address("321 Street")
-                .birthday(new Date())
-                .build();
+        userUpdateDto = UserUpdateDto.builder().fullName("Johnny Doe").address("321 Street").birthday(new Date()).build();
 
-        user = User.builder()
-                .fullName("John Doe")
-                .email("john@example.com")
-                .password("password")
-                .address("123 Street")
-                .birthday(new Date())
-                .role(UserRole.ADMIN)
-                .build();
+        user = User.builder().fullName("John Doe").email("john@example.com").password("password").address("123 Street").birthday(new Date()).role(UserRole.ADMIN).build();
 
-        userResDto = UserResDto.builder()
-                .id("123")
-                .fullName("John Doe")
-                .email("john@example.com")
-                .address("123 Street")
-                .birthday(new Date())
-                .role(UserRole.ADMIN)
-                .build();
+        userResDto = UserResDto.builder().id("123").fullName("John Doe").email("john@example.com").address("123 Street").birthday(new Date()).role(UserRole.ADMIN).build();
     }
 
     @Test
@@ -153,7 +126,7 @@ public class UserControllerTests {
         userPasswordDto.setPassword("password");
         userPasswordDto.setPasswordRepeat("password");
 
-        when(userService.userChangePassword(any(String.class), any(UserPasswordDto.class))).thenReturn(true);
+        when(userService.userChangePassword("123", userPasswordDto)).thenReturn(true);
 
         ResultActions response = mockMvc.perform(put("/api/v1/user/change-password/{id}", "123")
                 .accept(MediaType.APPLICATION_JSON)
@@ -169,7 +142,7 @@ public class UserControllerTests {
     @Test
     public void deleteTest() throws Exception, AlreadyExistException {
 
-        when(userService.deleteUser(any(String.class))).thenReturn(true);
+        when(userService.deleteUser("123")).thenReturn(true);
 
         ResultActions response = mockMvc.perform(delete("/api/v1/user/delete/{id}", "123")
                 .accept(MediaType.APPLICATION_JSON)
@@ -183,9 +156,12 @@ public class UserControllerTests {
     public void listTest() throws Exception {
         List<User> userList = Collections.singletonList(user);
         List<UserResDto> userResDtoList = Collections.singletonList(userResDto);
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("page", "1");
+        resultMap.put("size", "10");
 
-        when(userService.findAllUsers(anyMap())).thenReturn(userList);
-        when(dataMapper.listUserToListDto(anyList())).thenReturn(userResDtoList);
+        when(userService.findAllUsers(resultMap)).thenReturn(userList);
+        when(dataMapper.listUserToListDto(userList)).thenReturn(userResDtoList);
 
         ResultActions response = mockMvc.perform(get("/api/v1/user/list")
                 .param("size", "10")
@@ -202,8 +178,8 @@ public class UserControllerTests {
     @Test
     public void profileTest() throws Exception {
 
-        when(userService.findUserById(any(String.class))).thenReturn(user);
-        when(dataMapper.userToDto(any(User.class))).thenReturn(userResDto);
+        when(userService.findUserById("123")).thenReturn(user);
+        when(dataMapper.userToDto(user)).thenReturn(userResDto);
 
         ResultActions response = mockMvc.perform(get("/api/v1/user/profile/{id}", "123")
                 .accept(MediaType.APPLICATION_JSON)
@@ -211,5 +187,34 @@ public class UserControllerTests {
 
         response.andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("123"));
+    }
+
+    @Test
+    public void queryListTest() throws Exception {
+        List<User> userList = Collections.singletonList(user);
+        List<UserResDto> userResDtoList = Collections.singletonList(userResDto);
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("page", "1");
+        resultMap.put("size", "10");
+        resultMap.put("fullName", "John Doe");
+        resultMap.put("email", "john@example.com");
+
+        when(userService.filterUsers(resultMap)).thenReturn(userList);
+        when(dataMapper.listUserToListDto(userList)).thenReturn(userResDtoList);
+
+        ResultActions response = mockMvc.perform(get("/api/v1/user/query")
+                .param("size", "10")
+                .param("page", "1")
+                .param("fullName", "John Doe")
+                .param("email", "john@example.com")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id").exists())
+                .andExpect(jsonPath("$[0].fullName").value("John Doe"))
+                .andExpect(jsonPath("$[0].email").value("john@example.com"))
+                .andExpect(jsonPath("$.length()").value(1));
     }
 }

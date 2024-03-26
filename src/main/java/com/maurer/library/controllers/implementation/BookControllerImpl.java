@@ -79,9 +79,9 @@ public class BookControllerImpl implements BookController {
     @GetMapping("/list")
     public ResponseEntity<List<BookResDto>> list(@RequestParam Map<String, String> allParams) {
 
-        Page<Book> books = bookService.findAllBooks(allParams);
+        List<Book> books = bookService.findAllBooks(allParams);
 
-        return ResponseEntity.ok().body(dataMapper.listBookToListDto(books.getContent()));
+        return ResponseEntity.ok().body(dataMapper.listBookToListDto(books));
     }
 
     @Override
@@ -90,8 +90,8 @@ public class BookControllerImpl implements BookController {
 
         if(allParams.isEmpty()) throw new InvalidArgumentsException("Invalid amount of params sent!");
 
-        Page<Book> filteredBooks = bookService.filterBooks(allParams);
+        List<Book> filteredBooks = bookService.filterBooks(allParams);
 
-        return ResponseEntity.ok().body(dataMapper.listBookToListDto(filteredBooks.getContent()));
+        return ResponseEntity.ok().body(dataMapper.listBookToListDto(filteredBooks));
     }
 }

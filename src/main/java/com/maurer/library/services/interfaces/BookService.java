@@ -32,7 +32,7 @@ public interface BookService {
     List<Book> findAvailableBooks() throws InvalidArgumentsException;
 
     /** Returns list of books **/
-    Page<Book> findAllBooks(Map<String, String> allParams);
+    List<Book> findAllBooks(Map<String, String> allParams);
 
     /** Filters list of books by there genre **/
     List<Book> findBooksByGenre(String genre) throws InvalidArgumentsException;
@@ -46,5 +46,5 @@ public interface BookService {
     /** Updates current availability of the book **/
     Book updateIsAvailable(Boolean status, String bookId) throws InvalidArgumentsException, ObjectDoesntExistException, AlreadyExistException;
 
-    Page<Book> filterBooks(Map<String, String> allParams) throws InvalidArgumentsException, ObjectDoesntExistException;
+    List<Book> filterBooks(Map<String, String> allParams) throws InvalidArgumentsException, ObjectDoesntExistException;
 }
