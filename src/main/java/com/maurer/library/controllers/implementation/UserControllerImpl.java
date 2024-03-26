@@ -26,14 +26,13 @@ public class UserControllerImpl implements UserController {
 
     private final DataMapper dataMapper;
     private final UserService userService;
+    private final TokenGenerator tokenGenerator;
 
     @Autowired
-    TokenGenerator tokenGenerator;
-
-    @Autowired
-    public UserControllerImpl(DataMapper dataMapper, UserService userService) {
+    public UserControllerImpl(DataMapper dataMapper, UserService userService, TokenGenerator tokenGenerator) {
         this.dataMapper = dataMapper;
         this.userService = userService;
+        this.tokenGenerator = tokenGenerator;
     }
 
     @Override
@@ -94,11 +93,11 @@ public class UserControllerImpl implements UserController {
     //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResDto>> list(@RequestParam Map<String, String> allParams) {
 
-        Page<User> userList = userService.findAllUsers(allParams);
+        List<User> userList = userService.findAllUsers(allParams);
 
         if (userList.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
-        return ResponseEntity.ok().body(dataMapper.listUserToListDto(userList.getContent()));
+        return ResponseEntity.ok().body(dataMapper.listUserToListDto(userList));
     }
 
     @Override
@@ -116,9 +115,9 @@ public class UserControllerImpl implements UserController {
     //@PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<UserResDto>> filterList(@RequestParam Map<String, String> allParams) throws InvalidArgumentsException {
 
-        Page<User> filteredList = userService.filterUsers(allParams);
+        List<User> filteredList = userService.filterUsers(allParams);
 
-        return ResponseEntity.ok().body(dataMapper.listUserToListDto(filteredList.getContent()));
+        return ResponseEntity.ok().body(dataMapper.listUserToListDto(filteredList));
     }
 
 }

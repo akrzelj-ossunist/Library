@@ -123,14 +123,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> findAllUsers(Map<String, String> allParams) {
+    public List<User> findAllUsers(Map<String, String> allParams) {
 
         int page = allParams.get("page") != null ? Integer.parseInt(allParams.get("page")) - 1 : 0;
         int size = allParams.get("size") != null ? Integer.parseInt(allParams.get("size")) : 10;
 
         Pageable pageable = (Pageable) PageRequest.of(page, size);
 
-        return userRepository.findAll(pageable);
+        return userRepository.findAll(pageable).getContent();
     }
 
     @Override
@@ -151,13 +151,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> filterUsers(Map<String, String> allParams) throws InvalidArgumentsException {
+    public List<User> filterUsers(Map<String, String> allParams) throws InvalidArgumentsException {
 
         int page = allParams.get("page") != null ? Integer.parseInt(allParams.get("page")) - 1 : 0;
         int size = allParams.get("size") != null ? Integer.parseInt(allParams.get("size")) : 10;
 
         Pageable pageable = (Pageable) PageRequest.of(page, size);
 
-        return userRepository.findByFullNameAndAddressAndEmail(allParams.get("fullName"), allParams.get("address"), allParams.get("email"), pageable);
+        return userRepository.findByFullNameAndAddressAndEmail(
+                allParams.get("fullName"),
+                allParams.get("address"),
+                allParams.get("email"),
+                pageable).getContent();
     }
 }

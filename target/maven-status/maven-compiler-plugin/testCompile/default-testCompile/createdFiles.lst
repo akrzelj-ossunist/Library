@@ -1,1 +1,2 @@
-com/maurer/library/LibraryApplicationTests.class
+com\maurer\library\LibraryApplicationTests.class
+com\maurer\library\controllers\UserControllerTests.class
