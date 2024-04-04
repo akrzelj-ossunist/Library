@@ -41,7 +41,7 @@ public class SecurityConfig {
     private final RsaKeyProperties rsaKeyProperties;
 
     //@Value("${frontend.url}")
-    private String frontendUrl = "";
+    private String frontendUrl = "http://localhost:3000";
 
     public SecurityConfig(RsaKeyProperties rsaKeyProperties) {
         this.rsaKeyProperties = rsaKeyProperties;

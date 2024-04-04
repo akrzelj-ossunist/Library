@@ -1,5 +1,9 @@
 com\maurer\library\controllers\AuthorControllerTests.class
 com\maurer\library\LibraryApplicationTests.class
-com\maurer\library\controllers\RentEntryControllerTests.class
+com\maurer\library\services\AuthorServiceTests.class
 com\maurer\library\controllers\UserControllerTests.class
+com\maurer\library\services\RentEntryServiceTests.class
+com\maurer\library\services\UserServiceTests.class
 com\maurer\library\controllers\BookControllerTests.class
+com\maurer\library\controllers\RentEntryControllerTests.class
+com\maurer\library\services\BookServiceTests.class

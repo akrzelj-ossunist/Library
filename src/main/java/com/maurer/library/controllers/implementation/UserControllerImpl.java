@@ -55,7 +55,11 @@ public class UserControllerImpl implements UserController {
 
         String jwtToken = tokenGenerator.generateToken(String.valueOf(user.getRole()), user.getFullName());
 
-        return ResponseEntity.status(HttpStatus.FOUND).body(jwtToken);
+        System.out.println(userLoginDto.getPassword() + " email: " + userLoginDto.getEmail());
+
+        System.out.println(jwtToken);
+
+        return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
     }
 
     @Override

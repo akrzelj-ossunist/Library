@@ -1,5 +1,9 @@
 F:\library-app-jpa\src\test\java\com\maurer\library\controllers\UserControllerTests.java
+F:\library-app-jpa\src\test\java\com\maurer\library\services\BookServiceTests.java
+F:\library-app-jpa\src\test\java\com\maurer\library\services\UserServiceTests.java
 F:\library-app-jpa\src\test\java\com\maurer\library\controllers\AuthorControllerTests.java
 F:\library-app-jpa\src\test\java\com\maurer\library\LibraryApplicationTests.java
 F:\library-app-jpa\src\test\java\com\maurer\library\controllers\BookControllerTests.java
+F:\library-app-jpa\src\test\java\com\maurer\library\services\AuthorServiceTests.java
+F:\library-app-jpa\src\test\java\com\maurer\library\services\RentEntryServiceTests.java
 F:\library-app-jpa\src\test\java\com\maurer\library\controllers\RentEntryControllerTests.java

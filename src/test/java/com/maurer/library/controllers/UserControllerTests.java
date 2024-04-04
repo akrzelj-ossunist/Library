@@ -92,7 +92,7 @@ public class UserControllerTests {
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(userLoginDto)));
 
-        response.andExpect(status().isFound())
+        response.andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(jwtToken));
     }
 
