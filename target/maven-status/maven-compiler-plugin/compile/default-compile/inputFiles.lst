@@ -5,6 +5,7 @@ F:\library-app-jpa\src\main\java\com\maurer\library\config\SecurityConfig.java
 F:\library-app-jpa\src\main\java\com\maurer\library\models\enums\Genre.java
 F:\library-app-jpa\src\main\java\com\maurer\library\dtos\AuthorResDto.java
 F:\library-app-jpa\src\main\java\com\maurer\library\models\enums\UserRole.java
+F:\library-app-jpa\src\main\java\com\maurer\library\dtos\LoginResDto.java
 F:\library-app-jpa\src\main\java\com\maurer\library\exceptions\AlreadyExistException.java
 F:\library-app-jpa\src\main\java\com\maurer\library\services\interfaces\UserService.java
 F:\library-app-jpa\src\main\java\com\maurer\library\controllers\implementation\RentEntryControllerImpl.java

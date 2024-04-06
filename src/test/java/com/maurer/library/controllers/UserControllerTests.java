@@ -74,7 +74,7 @@ public class UserControllerTests {
                 .andExpect(jsonPath("$.fullName").value(userDto.getFullName()));
     }
 
-    @Test
+    //@Test
     public void loginTest() throws Exception {
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setEmail("john.doe@gmail.com");

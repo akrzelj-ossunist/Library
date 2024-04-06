@@ -45,7 +45,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto userLoginDto) throws ObjectDoesntExistException, InvalidArgumentsException {
+    public ResponseEntity<LoginResDto> login(@Valid @RequestBody UserLoginDto userLoginDto) throws ObjectDoesntExistException, InvalidArgumentsException {
 
         boolean userExists = userService.validateLogin(userLoginDto);
 
@@ -53,13 +53,15 @@ public class UserControllerImpl implements UserController {
 
         User user = userService.findUserByEmail(userLoginDto.getEmail());
 
-        String jwtToken = tokenGenerator.generateToken(String.valueOf(user.getRole()), user.getFullName());
+        String jwtToken = tokenGenerator.generateToken(String.valueOf(user.getRole()), user.getId());
 
-        System.out.println(userLoginDto.getPassword() + " email: " + userLoginDto.getEmail());
+        LoginResDto loginResDto = LoginResDto.builder()
+                .success(true)
+                .token(jwtToken)
+                .userResDto(dataMapper.userToDto(user))
+                .build();
 
-        System.out.println(jwtToken);
-
-        return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
+        return ResponseEntity.status(HttpStatus.OK).body(loginResDto);
     }
 
     @Override

@@ -27,6 +27,7 @@ com\maurer\library\dtos\UserResDto$UserResDtoBuilder.class
 com\maurer\library\dtos\AuthorDto$AuthorDtoBuilder.class
 com\maurer\library\controllers\implementation\BookControllerImpl.class
 com\maurer\library\exceptions\PasswordMismatchException.class
+com\maurer\library\dtos\LoginResDto$LoginResDtoBuilder.class
 com\maurer\library\services\interfaces\BookService.class
 com\maurer\library\config\OAuth2LoginSuccessHandler.class
 com\maurer\library\exceptions\InvalidArgumentsException.class
@@ -39,6 +40,7 @@ com\maurer\library\dtos\UserUpdateDto$UserUpdateDtoBuilder.class
 com\maurer\library\dtos\UserUpdateDto.class
 com\maurer\library\dtos\BookUpdateDto$BookUpdateDtoBuilder.class
 com\maurer\library\dtos\BookResDto$BookResDtoBuilder.class
+com\maurer\library\dtos\LoginResDto.class
 com\maurer\library\mapper\DataMapperImpl.class
 com\maurer\library\dtos\BookDto$BookDtoBuilder.class
 com\maurer\library\dtos\UserPasswordDto.class
