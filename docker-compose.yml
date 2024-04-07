@@ -12,6 +12,16 @@
       depends_on:
         - ${DB_CONTAINER_NAME}
 
+    library-fe:
+      image: library-react
+      container_name: library-frontend
+      depends_on:
+        - your-service
+      volumes:
+        - library_fe_data:/var/lib/library_fe/data
+      ports:
+        - "3001:3000"
+
     db:
       image: ${DB_IMAGE}
       container_name: ${DB_CONTAINER_NAME}
@@ -32,7 +42,10 @@
         - library_dbeaver_data:/opt/cloudbeaver/workspace
       ports:
         - ${CLOUDBEAVER_PORT}
+
   volumes:
+    library_fe_data:
+      driver: local
     library_data:
       driver: local
     library_dbeaver_data:

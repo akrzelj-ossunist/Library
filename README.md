@@ -43,7 +43,7 @@
 
 ### Setup simple docker app in spring boot:
 
-1. Create Dockerfile
+1. Create Dockerfile for backend side
 
    ```
    FROM openjdk:21 (21 is my version if you are using different one change it)
@@ -52,51 +52,101 @@
    ENTRYPOINT ["java", "-jar", "/app.jar"]
    ```
 
-2. Create docker-compose.yml file
+2. Create Dockerfile for frontend side
+
+   ```
+   FROM node:20-alpine
+   WORKDIR /app
+   COPY package.json .
+   RUN npm install
+   COPY . .
+   RUN npm run build
+   EXPOSE 3000
+   CMD [ "npm", "run", "preview" ]
+   ```
+
+3. Make sure to setup config(vite.config.ts) for frontend so app is starting on correct port
+
+   ```
+   import { defineConfig } from "vite";
+   import react from "@vitejs/plugin-react";
+   
+   export default defineConfig({
+     base: "/",
+     plugins: [react()],
+     preview: {
+       port: 3000,
+       strictPort: true,
+     },
+     server: {
+       port: 3000,
+       strictPort: true,
+       host: true,
+       origin: "http://localhost:3000",
+     },
+   });
+   
+   ```
+
+4. Create docker-compose.yml file
 
    ```
    version: '3'
    services:
-     your-service:
-       image: image-name (name of the image you wanna create)
-       environment:
-         - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/db-name (db is tag beneath and db-name must match out database name)
-         - SPRING_DATASOURCE_USERNAME=admin (must match database username)
-         - SPRING_DATASOURCE_PASSWORD=admin (any password you want)
-         - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-       ports:
-         - "8081:8080"  # Adjust the port mapping as needed
-       depends_on:
-         - db
+    your-service:
+      image: ${IMAGE_NAME}
+      environment:
+        - SPRING_DATASOURCE_URL=${DB_URL}
+        - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+        - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+        - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      ports:
+        - ${BACKEND_PORT}
+      depends_on:
+        - ${DB_CONTAINER_NAME}
 
-     db:
-       image: postgres:latest
-       container_name: db
-       environment:
-         POSTGRES_PASSWORD: admin (any password for our database)
-         POSTGRES_USER: admin (any username for our database)
-         POSTGRES_DB: library (any database name for our database)
-       ports:
-         - "5432:5432"
-       volumes:
-         - library_data:/var/lib/postgresql/data (where database info will be saved locally)
+    library-fe:
+      image: library-react
+      container_name: library-frontend
+      depends_on:
+        - your-service
+      volumes:
+        - library_fe_data:/var/lib/library_fe/data
+      ports:
+        - "3001:3000"
 
-     cloudbeaver:
-       image: dbeaver/cloudbeaver:latest
-       restart: always
-       container_name: cloudbeaver
-       volumes:
-         - library_dbeaver_data:/opt/cloudbeaver/workspace
-       ports:
-         - "8978:8978" (dont change anything about cloudbeaver)
-   volumes:
-     library_data:
-       driver: local
-     library_dbeaver_data:
-       driver: local
+    db:
+      image: ${DB_IMAGE}
+      container_name: ${DB_CONTAINER_NAME}
+      environment:
+        POSTGRES_PASSWORD: ${DB_PASSWORD}
+        POSTGRES_USER: ${DB_USERNAME}
+        POSTGRES_DB: ${DB_NAME}
+      ports:
+        - ${DB_PORT}
+      volumes:
+        - library_data:/var/lib/postgresql/data
+
+    cloudbeaver:
+      image: dbeaver/cloudbeaver:latest
+      restart: always
+      container_name: cloudbeaver
+      volumes:
+        - library_dbeaver_data:/opt/cloudbeaver/workspace
+      ports:
+        - ${CLOUDBEAVER_PORT}
+
+    volumes:
+      library_fe_data:
+        driver: local
+      library_data:
+        driver: local
+      library_dbeaver_data:
+        driver: local
+
    ```
 
-3. Make sure pom file have path to main file
+5. Make sure pom file have path to main file
    ```
    <plugin>
    	<groupId>org.springframework.boot</groupId>
@@ -121,13 +171,14 @@
    	</executions>
    </plugin>
    ```
-4. Start your dockerized spring app
+6. Start your dockerized spring app
    - mvn clean package
-   - docker build -t name-of-your-image-file:latest .
-   - docker images(can see if u created image)
+   - docker build -t name-of-your-image-file:latest . (build frontend and backend images)
+   - docker images(can see if u created images)
    - docker-compose up (if you dont have installed docker-compose: apt install docker-compose)
    - docker-compose down (when you close app to remove containers)
-5. Container ports:
+7. Container ports:
+   - http://localhost:3001 (frontend port)
    - http://localhost:8081 (backend port)
    - http://localhost:8978 (dbeaver port)
    - http://localhost:5432 (postgres port)
