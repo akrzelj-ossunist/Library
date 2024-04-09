@@ -30,7 +30,7 @@ const Login: React.FC = () => {
     if (loginCredentials.jwtToken !== "") {
       navigate("/home");
     }
-  }, []);
+  }, [loginCredentials.success]);
 
   const handleSubmit = async (loginForm: ILoginForm) => {
     const response = await userLogin(loginForm);
@@ -43,6 +43,7 @@ const Login: React.FC = () => {
         jwtToken: jwtToken,
       });
       localStorage.setItem("jwt", jwtToken);
+      navigate("/home");
     } else {
       setInvalidLoginData(true);
     }

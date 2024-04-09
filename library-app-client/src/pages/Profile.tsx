@@ -9,7 +9,7 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     !loginCredentials.success && navigate("/login");
-  }, []);
+  }, [loginCredentials.success]);
 
   return (
     <div className="container mx-auto">

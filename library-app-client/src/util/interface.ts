@@ -33,3 +33,9 @@ export interface IRegisterForm {
 export interface IJwtPayload extends JwtPayload {
   scope: string
 }
+
+export interface IBookFilters {
+  genre: string | (string | null)[] | null
+  available: boolean | null,
+  search: string | (string | null)[] | null
+}

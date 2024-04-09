@@ -27,7 +27,7 @@ const Navigation: React.FC = () => {
   };
 
   useOnClickOutside(dropDownRef, () => setShowDropMenu(false));
-  console.log(loginCredentials);
+
   return (
     <nav className="flex justify-between items-center border-b-[1px] shadow-lg bg-white p-2">
       <Link to="/home" className="flex items-center mx-4">

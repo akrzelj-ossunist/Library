@@ -24,7 +24,7 @@ const Registration: React.FC = () => {
     if (loginCredentials.jwtToken !== "") {
       navigate("/home");
     }
-  }, []);
+  }, [loginCredentials.success]);
 
   const registerSchema = yup.object().shape({
     fullName: yup
