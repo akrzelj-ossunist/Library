@@ -20,7 +20,7 @@
       volumes:
         - library_fe_data:/var/lib/library_fe/data
       ports:
-        - "3001:3000"
+        - "3001:80"
 
     db:
       image: ${DB_IMAGE}
