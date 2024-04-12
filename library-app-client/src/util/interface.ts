@@ -37,5 +37,7 @@ export interface IJwtPayload extends JwtPayload {
 export interface IBookFilters {
   genre: string | (string | null)[] | null
   available: boolean | null,
-  search: string | (string | null)[] | null
+  book: string | (string | null)[] | null,
+  isbn: string | (string | null)[] | null,
+  author: string | (string | null)[] | null
 }

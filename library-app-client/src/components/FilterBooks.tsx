@@ -8,7 +8,9 @@ import { IBookFilters } from "../util/interface";
 const FilterBooks: React.FC = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [filters, setFilters] = useState<IBookFilters>({
-    search: "",
+    book: "",
+    isbn: "",
+    author: "",
     genre: "",
     available: null,
   });
@@ -35,7 +37,7 @@ const FilterBooks: React.FC = () => {
     { value: false, label: "No" },
   ];
   return (
-    <div className="w-full">
+    <div className="w-full mt-[13%] phone:mt-0">
       <div className="flex items-center m-8 ml-[20%] tablet:ml-[10%] phone:ml-[5%]">
         <LibraryIcon className="h-[3em] w-[3em] tablet:h-[2em] tablet:w-[2em]" />
         <p className="font-bold text-4xl mx-2 tablet:text-2xl">EDUCA LIBRARY</p>
@@ -44,21 +46,21 @@ const FilterBooks: React.FC = () => {
         <input
           type="text"
           onChange={(elment) =>
-            setFilters({ ...filters, search: elment?.target.value })
+            setFilters({ ...filters, book: elment?.target.value })
           }
           className="w-[50%] border-[1px] border-black rounded-full p-2 pl-6 mr-4 tablet:w-[70%] phone:w-[95%]"
-          placeholder="Search for title, author, ISBN..."></input>
+          placeholder="Search for book title..."></input>
         {windowWidth < 850 ? (
           <button className="text-white cursor-pointer font-bold w-[10%] rounded-xl text-2xl bg-blue-500 p-2 active:bg-blue-300 shadow-lg flex justify-center items-center">
             <Link
-              to={`/books?genre=${filters.genre}&available=${filters.available}&search=${filters.search}`}>
+              to={`/books?genre=${filters.genre}&available=${filters.available}&book=${filters.book}&author=${filters.author}&isbn=${filters.isbn}`}>
               <IconSearch />
             </Link>
           </button>
         ) : (
           <button className="text-white cursor-pointer font-bold w-[10%] rounded-xl text-2xl bg-blue-500 p-2 active:bg-blue-300 shadow-lg">
             <Link
-              to={`/books?genre=${filters.genre}&available=${filters.available}&search=${filters.search}`}>
+              to={`/books?genre=${filters.genre}&available=${filters.available}&book=${filters.book}&author=${filters.author}&isbn=${filters.isbn}`}>
               Search
             </Link>
           </button>
@@ -81,6 +83,22 @@ const FilterBooks: React.FC = () => {
           options={isAvailableOptions}
           className="w-[150px] m-2"
           placeholder="Available..."
+        />
+        <input
+          type="text"
+          onChange={(elment) =>
+            setFilters({ ...filters, author: elment?.target.value })
+          }
+          className="border-[1px] border-slate-300 m-2 p-[6px] rounded-md w-[150px]"
+          placeholder="Author..."
+        />
+        <input
+          type="text"
+          onChange={(elment) =>
+            setFilters({ ...filters, isbn: elment?.target.value })
+          }
+          className="border-[1px] border-slate-300 m-2 p-[6px] rounded-md w-[150px]"
+          placeholder="ISBN..."
         />
       </div>
     </div>

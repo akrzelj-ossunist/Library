@@ -35,7 +35,7 @@ public class AuthorControllerImpl implements AuthorController {
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<AuthorResDto> create(@Valid @RequestBody AuthorDto authorDto) throws ObjectDoesntExistException, AlreadyExistException, InvalidArgumentsException, InvalidAuthorException {
-
+        System.out.println(authorDto.getFullName() + " " + authorDto.getBirthday());
         Author createdAuthor = authorService.addAuthor(authorDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dataMapper.authorToDto(createdAuthor));

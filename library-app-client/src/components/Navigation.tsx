@@ -29,10 +29,12 @@ const Navigation: React.FC = () => {
   useOnClickOutside(dropDownRef, () => setShowDropMenu(false));
 
   return (
-    <nav className="flex justify-between items-center border-b-[1px] shadow-lg bg-white p-2">
+    <nav className="flex justify-between items-center border-b-[1px] shadow-lg bg-white p-2 phone:p-1">
       <Link to="/home" className="flex items-center mx-4">
         <LibraryIcon />
-        <p className="font-bold text-2xl mx-2">EDUCA LIBRARY</p>
+        <p className="font-bold text-2xl mx-2 phone:text-lg phone:mt-1">
+          EDUCA LIBRARY
+        </p>
       </Link>
       <div className="flex justify-center items-center">
         <div>

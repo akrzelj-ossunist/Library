@@ -172,11 +172,10 @@ public class BookServiceImpl implements BookService {
         int size = allParams.get("size") != null ? Integer.parseInt(allParams.get("size")) : 10;
 
         Pageable pageable = (Pageable) PageRequest.of(page, size);
-
         String title = allParams.get("title");
         String isbn = allParams.get("isbn");
         Author author = authorService.findByFullName(allParams.get("author"));
-        Genre genre = Genre.valueOf(allParams.get("genre"));
+        Genre genre = Objects.equals(allParams.get("genre"), "") ? null : Genre.valueOf(allParams.get("genre"));
         Boolean isAvailable = Boolean.valueOf(allParams.get("available"));
 
         return bookRepository.findByTitleAndAuthorAndIsAvailableAndIsbnAndGenre(title, author, isAvailable, isbn, genre, pageable).getContent();

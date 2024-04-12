@@ -41,11 +41,7 @@ const App: React.FC = () => {
     }
   }, [loginCredentials.success]);
 
-  return (
-    <div className="flex absolute h-[100vh] w-[100vw] -z-10 top-0 left-0 bg-slate-50">
-      {routes}
-    </div>
-  );
+  return <div className="">{routes}</div>;
 };
 
 export default App;

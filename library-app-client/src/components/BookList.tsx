@@ -1,24 +1,25 @@
 import queryString from "query-string";
 import { useLocation } from "react-router-dom";
 import { IBookFilters } from "../util/interface";
+import useGetFilteredBooksQuery from "../services/getFilteredBooks";
 
 const BookList: React.FC = () => {
   const location = useLocation();
-  const { genre, available, search } = queryString.parse(location.search);
+  const { genre, available, book, author, isbn } = queryString.parse(
+    location.search
+  );
+
   const filterParams: IBookFilters = {
     genre: genre,
     available: available !== null ? true : false,
-    search: search,
+    book: book,
+    author: author,
+    isbn: isbn,
   };
-  //const { isLoading, data: books } = useGetFilteredBooksQuery(filterParams);
+  const { isLoading, data: books } = useGetFilteredBooksQuery(filterParams);
 
-  return (
-    <div>
-      <h2>Genre: {filterParams.genre}</h2>
-      <h2>Available: {filterParams.available?.toString()}</h2>
-      <h2>Search: {filterParams.search}</h2>
-    </div>
-  );
+  isLoading ? console.log("Loading...") : console.log(books);
+  return <div className="flex w-full justify-center"></div>;
 };
 
 export default BookList;

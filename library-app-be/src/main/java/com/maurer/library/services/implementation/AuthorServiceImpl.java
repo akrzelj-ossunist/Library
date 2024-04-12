@@ -33,7 +33,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Author addAuthor(AuthorDto authorDto) throws InvalidAuthorException, AlreadyExistException, InvalidArgumentsException, ObjectDoesntExistException {
+    public Author addAuthor(AuthorDto authorDto) throws InvalidAuthorException, AlreadyExistException, ObjectDoesntExistException, InvalidArgumentsException {
 
         if(authorDto == null) throw new InvalidAuthorException("Author cannot be null!");
 
@@ -93,9 +93,7 @@ public class AuthorServiceImpl implements AuthorService {
 
         Optional<Author> author = authorRepository.findByFullName(fullName);
 
-        if(author.isEmpty()) throw new ObjectDoesntExistException("Author you are looking for doesn't exist!");
-
-        return author.get();
+        return author.orElse(null);
     }
 
     @Override
