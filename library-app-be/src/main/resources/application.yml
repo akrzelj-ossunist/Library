@@ -1,3 +1,5 @@
+server:
+    port: 8081
 frontend:
     url: ${FRONTEND_URL}
 rsa:
@@ -31,4 +33,3 @@ management:
 springdoc:
     api-docs:
         path: /api-docs
-

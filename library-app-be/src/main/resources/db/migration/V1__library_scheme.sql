@@ -12,16 +12,18 @@ CREATE TABLE IF NOT EXISTS Users (
 
 CREATE TABLE IF NOT EXISTS Author (
     id char(36) NOT NULL PRIMARY KEY DEFAULT (UUID_GENERATE_V4()),
-    full_name VARCHAR(255) NOT NULL
+    full_name VARCHAR(255) NOT NULL,
+    birthday TIMESTAMP NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Book (
     id char(36) NOT NULL PRIMARY KEY DEFAULT (UUID_GENERATE_V4()),
     title VARCHAR(255) NOT NULL,
     isbn VARCHAR(255) NOT NULL,
-    available VARCHAR(255) NOT NULL,
+    available  NOT NULL,
     note VARCHAR(255) NOT NULL,
     genre VARCHAR(255) NOT NULL,
+    created_date TIMESTAMP NOT NULL,
     author_id CHAR(36) NOT NULL,
     FOREIGN KEY (author_id) REFERENCES Author(id)
 );

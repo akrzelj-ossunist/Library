@@ -31,7 +31,7 @@ public class Book {
     @JoinColumn(name = "author_id")
     private Author author;
 
-    @Column
+    @Column(name = "available")
     private Boolean isAvilable;
 
     @Column

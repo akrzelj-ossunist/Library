@@ -4,6 +4,7 @@ import IconSearch from "../assets/IconSearch";
 import Select from "react-select";
 import { Link } from "react-router-dom";
 import { IBookFilters } from "../util/interface";
+import { ClassNames } from "@emotion/react";
 
 const FilterBooks: React.FC = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -51,19 +52,29 @@ const FilterBooks: React.FC = () => {
           className="w-[50%] border-[1px] border-black rounded-full p-2 pl-6 mr-4 tablet:w-[70%] phone:w-[95%]"
           placeholder="Search for book title..."></input>
         {windowWidth < 850 ? (
-          <button className="text-white cursor-pointer font-bold w-[10%] rounded-xl text-2xl bg-blue-500 p-2 active:bg-blue-300 shadow-lg flex justify-center items-center">
-            <Link
-              to={`/books?genre=${filters.genre}&available=${filters.available}&book=${filters.book}&author=${filters.author}&isbn=${filters.isbn}`}>
+          <Link
+            to={`/books?genre=${filters.genre}&available=${
+              filters.available
+            }&book=${filters.book}&author=${filters.author}&isbn=${
+              filters.isbn
+            }&page=${1}`}
+            className="w-[10%]">
+            <button className="text-white cursor-pointer font-bold w-[100%] rounded-xl text-2xl bg-blue-500 p-2 active:bg-blue-300 shadow-lg flex justify-center items-center">
               <IconSearch />
-            </Link>
-          </button>
+            </button>
+          </Link>
         ) : (
-          <button className="text-white cursor-pointer font-bold w-[10%] rounded-xl text-2xl bg-blue-500 p-2 active:bg-blue-300 shadow-lg">
-            <Link
-              to={`/books?genre=${filters.genre}&available=${filters.available}&book=${filters.book}&author=${filters.author}&isbn=${filters.isbn}`}>
+          <Link
+            to={`/books?genre=${filters.genre}&available=${
+              filters.available
+            }&book=${filters.book}&author=${filters.author}&isbn=${
+              filters.isbn
+            }&page=${1}`}
+            className="w-[10%]">
+            <button className="text-white cursor-pointer font-bold w-[100%] rounded-xl text-2xl bg-blue-500 p-2 active:bg-blue-300 shadow-lg">
               Search
-            </Link>
-          </button>
+            </button>
+          </Link>
         )}
       </div>
       <div className="flex items-center m-4 ml-[20%] tablet:ml-[10%] phone:ml-[5%] flex-wrap">

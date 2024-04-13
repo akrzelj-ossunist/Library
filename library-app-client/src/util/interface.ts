@@ -41,3 +41,17 @@ export interface IBookFilters {
   isbn: string | (string | null)[] | null,
   author: string | (string | null)[] | null
 }
+
+export interface IBook {
+  id: string;
+  title: string;
+  author: {
+      id: number;
+      fullName: string;
+      birthday: string; // Assuming this is a string representing the birthday
+  };
+  createdDate: string; // Assuming this is a string representing the creation date
+  genre: string;
+  isAvailable: boolean;
+  isbn: string;
+}

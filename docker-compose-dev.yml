@@ -1,0 +1,30 @@
+version: '3'
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: library
+    ports:
+      - "5432:5432"
+    volumes:
+      - library_data:/var/lib/postgresql/data
+
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:latest
+    restart: always
+    container_name: cloudbeaver
+    volumes:
+      - library_dbeaver_data:/opt/cloudbeaver/workspace
+    ports:
+      - ${CLOUDBEAVER_PORT}
+
+volumes:
+  library_data:
+    driver: local
+  library_dbeaver_data:
+    driver: local
+
+

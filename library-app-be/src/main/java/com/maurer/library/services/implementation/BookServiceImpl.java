@@ -166,18 +166,18 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> filterBooks(Map<String, String> allParams) throws InvalidArgumentsException, ObjectDoesntExistException {
-
-
         int page = allParams.get("page") != null ? Integer.parseInt(allParams.get("page")) - 1 : 0;
         int size = allParams.get("size") != null ? Integer.parseInt(allParams.get("size")) : 10;
 
-        Pageable pageable = (Pageable) PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size);
+
         String title = allParams.get("title");
         String isbn = allParams.get("isbn");
         Author author = authorService.findByFullName(allParams.get("author"));
-        Genre genre = Objects.equals(allParams.get("genre"), "") ? null : Genre.valueOf(allParams.get("genre"));
-        Boolean isAvailable = Boolean.valueOf(allParams.get("available"));
+        Genre genre = allParams.containsKey("genre") && !allParams.get("genre").isEmpty() ? Genre.valueOf(allParams.get("genre")) : null;
+        Boolean isAvailable = allParams.containsKey("available") ? Boolean.valueOf(allParams.get("available")) : null;
 
         return bookRepository.findByTitleAndAuthorAndIsAvailableAndIsbnAndGenre(title, author, isAvailable, isbn, genre, pageable).getContent();
     }
+
 }
