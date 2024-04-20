@@ -4,6 +4,7 @@ import Navigation from "./Navigation";
 import { ILoginCredentials } from "../util/interface";
 import decodeJwtToken from "../util/jwtToken";
 import useGetUserByIdQuery from "../services/getUserById";
+import { validateJwtToken } from "../util/validateJwtToken";
 
 export const LoginContext = createContext<{
   loginCredentials: ILoginCredentials;
@@ -25,12 +26,12 @@ export const LoginContext = createContext<{
 });
 
 const Layout: React.FC<{ children: JSX.Element }> = ({ children }) => {
-  const jwtToken = localStorage.getItem("jwt") || "";
+  const jwtToken = validateJwtToken() || "";
   const { isLoading, data } = useGetUserByIdQuery(
     decodeJwtToken(jwtToken)?.sub || ""
   );
   const [loginCredentials, setLoginCredentials] = useState<ILoginCredentials>({
-    success: jwtToken !== "" ? true : false,
+    success: jwtToken !== "",
     user: {
       id: "",
       fullName: "",
