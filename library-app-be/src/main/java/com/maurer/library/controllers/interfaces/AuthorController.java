@@ -37,4 +37,6 @@ public interface AuthorController {
 
     /** Takes all params from link and filters all authors then sends that list to client side **/
     ResponseEntity<List<AuthorResDto>> filterList(Map<String, String> allParams) throws InvalidArgumentsException;
+
+    ResponseEntity<List<AuthorResDto>> searchList(String search) throws InvalidArgumentsException;
 }

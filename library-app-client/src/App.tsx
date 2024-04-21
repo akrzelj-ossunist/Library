@@ -7,6 +7,7 @@ import { LoginContext } from "./components/Layout";
 import Profile from "./pages/Profile";
 import Books from "./pages/Books";
 import CreateAuthor from "./pages/CreateAuthor";
+import CreateBook from "./pages/CreateBook";
 
 const App: React.FC = () => {
   const { loginCredentials } = useContext(LoginContext);
@@ -37,6 +38,10 @@ const App: React.FC = () => {
     {
       path: "/actions/create-author",
       element: <CreateAuthor />,
+    },
+    {
+      path: "/actions/create-book",
+      element: <CreateBook />,
     },
   ]);
 

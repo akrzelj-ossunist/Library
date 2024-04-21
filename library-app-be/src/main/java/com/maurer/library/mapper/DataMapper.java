@@ -30,7 +30,8 @@ public interface DataMapper {
 
     @Mapping(target = "isAvilable", expression = "java(true)")
     @Mapping(target = "genre", expression = "java(com.maurer.library.models.enums.Genre.valueOf(bookDto.getGenre().toUpperCase()))")
-    @Mapping(target = "author", expression = "java(authorService.findByAuthorId(bookDto.getAuthor()))")
+    @Mapping(target = "author", expression = "java(authorService.findByFullName(bookDto.getAuthor()))")
+    @Mapping(target = "createdDate", expression = "java(new java.util.Date())")
     Book dtoToBook(BookDto bookDto, AuthorService authorService) throws ObjectDoesntExistException, InvalidArgumentsException;
 
     BookResDto bookToDto(Book book);

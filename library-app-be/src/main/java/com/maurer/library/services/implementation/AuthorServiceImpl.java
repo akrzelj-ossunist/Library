@@ -91,9 +91,15 @@ public class AuthorServiceImpl implements AuthorService {
 
         if(fullName == null) throw new InvalidArgumentsException("Entered invalid arguments!");
 
-        Optional<Author> author = authorRepository.findByFullName(fullName);
+        return authorRepository.findByFullName(fullName).orElse(null);
+    }
 
-        return author.orElse(null);
+    @Override
+    public List<Author> findByPartialFullName(String fullName) throws InvalidArgumentsException {
+
+        if(fullName == null) throw new InvalidArgumentsException("Entered invalid arguments!");
+
+        return authorRepository.findByPartialFullName(fullName);
     }
 
     @Override

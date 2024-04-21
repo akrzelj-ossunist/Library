@@ -31,6 +31,8 @@ public interface AuthorService {
 
     Author findByFullName(String fullName) throws InvalidArgumentsException, ObjectDoesntExistException;
 
+    List<Author> findByPartialFullName(String fullName) throws InvalidArgumentsException;
+
     /** Find all authors from library **/
     public List<Author> findAllAuthors(Map<String, String> allParams);
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/author")
@@ -89,5 +90,16 @@ public class AuthorControllerImpl implements AuthorController {
         List<Author> filteredAuthors = authorService.filterAuthors(allParams);
 
         return ResponseEntity.ok().body(dataMapper.listAuthorToListDto(filteredAuthors));
+    }
+
+    @Override
+    @GetMapping("/search")
+    public ResponseEntity<List<AuthorResDto>> searchList(@RequestParam String search) throws InvalidArgumentsException {
+
+        if (Objects.equals(search, "")) throw new InvalidArgumentsException("Sent arguments cannot be null!");
+        System.out.println(search);
+        List<Author> searchedAuthors = authorService.findByPartialFullName(search);
+
+        return ResponseEntity.ok().body(dataMapper.listAuthorToListDto(searchedAuthors));
     }
 }

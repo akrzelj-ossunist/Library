@@ -99,11 +99,7 @@ public class BookServiceImpl implements BookService {
 
         if(title == null) throw new InvalidArgumentsException("Sent arguments cannot be null!");
 
-        Optional<Book> book = bookRepository.findByTitle(title);
-
-        if(book.isEmpty()) throw new ObjectDoesntExistException("Object you are looking for doesn't exist!");
-
-        return book.get();
+        return bookRepository.findByTitle(title).orElse(null);
     }
 
     @Override
