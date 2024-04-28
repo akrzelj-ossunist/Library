@@ -26,11 +26,11 @@ public interface BookRepository extends JpaRepository<Book, String> {
     Optional<Book> findByIsbn(String value);
 
     @Query("SELECT b FROM Book b " +
-            "WHERE (:title IS NULL OR b.title = :title) " +
-            "AND (:author IS NULL OR b.author = :author) " +
+            "WHERE (:title IS NULL OR :title = '' OR (LENGTH(:title) >= 3 AND LOWER(b.title) LIKE LOWER(CONCAT('%', :title, '%')))) " +
+            "AND (:author IS NULL OR :author = '' OR (LENGTH(:author) >= 3 AND LOWER(b.author.fullName) LIKE LOWER(CONCAT('%', :author, '%')))) " +
             "AND (:isAvailable IS NULL OR b.isAvilable = :isAvailable) " +
-            "AND (:isbn IS NULL OR b.isbn = :isbn) " +
-            "AND (:genre IS NULL OR b.genre = :genre)")
+            "AND (:isbn IS NULL OR :isbn = '' OR b.isbn = :isbn) " +
+            "AND (:genre IS NULL OR :genre = '' OR b.genre = :genre)")
     Page<Book> findByTitleAndAuthorAndIsAvailableAndIsbnAndGenre(
-            String title, Author author, Boolean isAvailable, String isbn, Genre genre, Pageable pageable);
+            String title, String author, Boolean isAvailable, String isbn, Genre genre, Pageable pageable);
 }

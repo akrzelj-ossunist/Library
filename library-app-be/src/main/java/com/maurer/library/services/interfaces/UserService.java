@@ -46,6 +46,6 @@ public interface UserService {
     /** filters list of objects with params we send **/
     List<User> filterUsers(Map<String, String> allParams) throws InvalidArgumentsException;
 
-
+    List<User> findByPartialFullName(String fullName) throws InvalidArgumentsException;
 
 }

@@ -86,17 +86,8 @@ const Navigation: React.FC = () => {
                     onClick={() =>
                       setShowDropMenu({ ...showDropMenu, actions: false })
                     }>
-                    <button className="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 font-semibold border-b-[2px]">
+                    <button className="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 font-semibold">
                       Create author
-                    </button>
-                  </Link>
-                  <Link
-                    to="/actions/create-rent-entry"
-                    onClick={() =>
-                      setShowDropMenu({ ...showDropMenu, actions: false })
-                    }>
-                    <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-semibold">
-                      Create rent entry
                     </button>
                   </Link>
                 </div>
@@ -120,12 +111,12 @@ const Navigation: React.FC = () => {
                   ref={listsRef}
                   className="absolute bg-white border border-gray-200 py-2 mt-1 w-48 shadow-2xl">
                   <Link
-                    to="/lists/books"
+                    to="/lists/users"
                     onClick={() =>
                       setShowDropMenu({ ...showDropMenu, lists: false })
                     }>
                     <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-semibold border-b-[2px]">
-                      Books
+                      Users
                     </button>
                   </Link>
                   <Link

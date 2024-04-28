@@ -1,11 +1,14 @@
 package com.maurer.library.controllers.interfaces;
 
+import com.maurer.library.dtos.RentBookDto;
 import com.maurer.library.dtos.RentEntryResDto;
 import com.maurer.library.exceptions.AlreadyExistException;
 import com.maurer.library.exceptions.CurrentlyUnavailableException;
 import com.maurer.library.exceptions.InvalidArgumentsException;
 import com.maurer.library.exceptions.ObjectDoesntExistException;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +19,7 @@ public interface RentEntryController {
      * Receives new rent entry from client side and sends it to service side
      * In case new object is created returns created object otherwise returns bad request
      **/
-    ResponseEntity<RentEntryResDto> create(Map<String, String> allParams) throws ObjectDoesntExistException, CurrentlyUnavailableException, AlreadyExistException, InvalidArgumentsException;
+    ResponseEntity<RentEntryResDto> create(@Valid @RequestBody RentBookDto rentBookDto) throws ObjectDoesntExistException, CurrentlyUnavailableException, AlreadyExistException, InvalidArgumentsException;
 
     /**
      * Receives info for rent entry when we want to return book from client side and sends it to service side

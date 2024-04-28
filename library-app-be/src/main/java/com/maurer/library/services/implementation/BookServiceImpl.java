@@ -169,11 +169,22 @@ public class BookServiceImpl implements BookService {
 
         String title = allParams.get("title");
         String isbn = allParams.get("isbn");
-        Author author = authorService.findByFullName(allParams.get("author"));
+        String author = allParams.get("author");
         Genre genre = allParams.containsKey("genre") && !allParams.get("genre").isEmpty() ? Genre.valueOf(allParams.get("genre")) : null;
         Boolean isAvailable = allParams.containsKey("available") ? Boolean.valueOf(allParams.get("available")) : null;
 
-        return bookRepository.findByTitleAndAuthorAndIsAvailableAndIsbnAndGenre(title, author, isAvailable, isbn, genre, pageable).getContent();
+        List<Book> result = bookRepository.findByTitleAndAuthorAndIsAvailableAndIsbnAndGenre(title, author, isAvailable, isbn, genre, pageable).getContent();
+
+        System.out.println("\nTitle: " + title
+                + "\nAuthor: " + author
+                + "\nIs Available: " + isAvailable
+                + "\nISBN: " + isbn
+                + "\nGenre: " + genre
+                + "\nPageable: " + pageable
+                + "\nAll books: " + bookRepository.findByTitle(title)
+                + "\nResult: " + result);
+
+        return result;
     }
 
 }

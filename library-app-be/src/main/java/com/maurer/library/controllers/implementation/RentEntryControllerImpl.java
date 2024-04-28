@@ -37,13 +37,8 @@ public class RentEntryControllerImpl implements RentEntryController {
 
     @Override
     @PostMapping("/create")
-    public ResponseEntity<RentEntryResDto> create(@RequestParam Map<String, String> allParams) throws ObjectDoesntExistException, CurrentlyUnavailableException, AlreadyExistException, InvalidArgumentsException {
-
-        RentBookDto rentBookDto = RentBookDto.builder()
-                    .bookId(allParams.get("bookId"))
-                    .userId(allParams.get("userId"))
-                    .build();
-
+    public ResponseEntity<RentEntryResDto> create(@Valid @RequestBody RentBookDto rentBookDto) throws ObjectDoesntExistException, CurrentlyUnavailableException, AlreadyExistException, InvalidArgumentsException {
+        System.out.println("\n\nBookId" + rentBookDto.getBookId() + " UserId" + rentBookDto.getUserId());
         RentEntry rentEntry = rentService.rentBook(rentBookDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(dataMapper.rentEntryToDto(rentEntry));
     }

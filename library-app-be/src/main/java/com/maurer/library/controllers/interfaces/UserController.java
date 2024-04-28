@@ -3,6 +3,7 @@ package com.maurer.library.controllers.interfaces;
 import com.maurer.library.dtos.*;
 import com.maurer.library.exceptions.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -47,4 +48,6 @@ public interface UserController {
 
     /** Takes all params from link and filters all users then sends that list to client side **/
     ResponseEntity<List<UserResDto>> filterList(Map<String, String> allParams) throws InvalidArgumentsException;
+
+    ResponseEntity<List<UserResDto>> searchList(@RequestParam String search) throws InvalidArgumentsException;
 }

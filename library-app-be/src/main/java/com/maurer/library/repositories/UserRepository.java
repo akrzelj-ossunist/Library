@@ -1,10 +1,12 @@
 package com.maurer.library.repositories;
 
+import com.maurer.library.models.Author;
 import com.maurer.library.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,5 +27,6 @@ public interface UserRepository extends JpaRepository<User, String> {
             "AND (:email IS NULL OR u.email = :email)")
     Page<User> findByFullNameAndAddressAndEmail(String fullName, String address, String email, Pageable pageable);
 
-
+    @Query("SELECT u FROM User u WHERE LENGTH(:fullName) >= 3 AND LOWER(u.fullName) LIKE LOWER(CONCAT('%', :fullName, '%'))")
+    List<User> findByPartialFullName(@Param("fullName") String fullName);
 }

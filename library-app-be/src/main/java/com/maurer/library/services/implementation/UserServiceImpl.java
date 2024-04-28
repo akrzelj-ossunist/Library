@@ -6,6 +6,7 @@ import com.maurer.library.dtos.UserPasswordDto;
 import com.maurer.library.dtos.UserUpdateDto;
 import com.maurer.library.exceptions.*;
 import com.maurer.library.mapper.DataMapper;
+import com.maurer.library.models.Author;
 import com.maurer.library.models.RentEntry;
 import com.maurer.library.models.User;
 import com.maurer.library.models.enums.UserRole;
@@ -163,5 +164,13 @@ public class UserServiceImpl implements UserService {
                 allParams.get("address"),
                 allParams.get("email"),
                 pageable).getContent();
+    }
+
+    @Override
+    public List<User> findByPartialFullName(String fullName) throws InvalidArgumentsException {
+
+        if(fullName == null) throw new InvalidArgumentsException("Entered invalid arguments!");
+
+        return userRepository.findByPartialFullName(fullName);
     }
 }

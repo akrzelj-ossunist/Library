@@ -4,16 +4,19 @@ import IconSearch from "../assets/IconSearch";
 import Select from "react-select";
 import { Link } from "react-router-dom";
 import { IBookFilters } from "../util/interface";
-import { ClassNames } from "@emotion/react";
+import queryString from "query-string";
 
 const FilterBooks: React.FC = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const { genre, available, book, author, isbn } = queryString.parse(
+    location.search
+  );
   const [filters, setFilters] = useState<IBookFilters>({
-    book: "",
-    isbn: "",
-    author: "",
-    genre: "",
-    available: null,
+    book: book || "",
+    isbn: isbn || "",
+    author: author || "",
+    genre: genre || "",
+    available: (available === "null" ? null : available === "true") || null,
   });
 
   useEffect(() => {
@@ -46,6 +49,7 @@ const FilterBooks: React.FC = () => {
       <div className="flex w-full justify-center">
         <input
           type="text"
+          defaultValue={book ? book.toString() : ""}
           onChange={(elment) =>
             setFilters({ ...filters, book: elment?.target.value })
           }
@@ -81,9 +85,20 @@ const FilterBooks: React.FC = () => {
         <p className="font-semibold text-xl mx-2 tablet:text-lg">Filters: </p>
         <Select
           onChange={(elment) =>
-            setFilters({ ...filters, genre: elment?.value! })
+            setFilters({ ...filters, genre: elment?.value || null })
           }
           options={genreOptions}
+          defaultValue={
+            genre
+              ? {
+                  value: genre,
+                  label: genre
+                    ? genre.toString().charAt(0).toUpperCase() +
+                      genre.toString().slice(1).toLowerCase()
+                    : null,
+                }
+              : null
+          }
           className="w-[150px] m-2"
           placeholder="Genre..."
         />
@@ -93,6 +108,18 @@ const FilterBooks: React.FC = () => {
           }
           options={isAvailableOptions}
           className="w-[150px] m-2"
+          defaultValue={
+            available
+              ? {
+                  value: available === "true",
+                  label: available
+                    ? available === "true"
+                      ? "Yes"
+                      : "No"
+                    : null,
+                }
+              : null
+          }
           placeholder="Available..."
         />
         <input
@@ -101,6 +128,7 @@ const FilterBooks: React.FC = () => {
             setFilters({ ...filters, author: elment?.target.value })
           }
           className="border-[1px] border-slate-300 m-2 p-[6px] rounded-md w-[150px]"
+          defaultValue={author ? author.toString() : ""}
           placeholder="Author..."
         />
         <input
@@ -109,6 +137,7 @@ const FilterBooks: React.FC = () => {
             setFilters({ ...filters, isbn: elment?.target.value })
           }
           className="border-[1px] border-slate-300 m-2 p-[6px] rounded-md w-[150px]"
+          defaultValue={isbn ? isbn.toString() : ""}
           placeholder="ISBN..."
         />
       </div>

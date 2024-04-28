@@ -4,6 +4,7 @@ import com.maurer.library.controllers.interfaces.UserController;
 import com.maurer.library.dtos.*;
 import com.maurer.library.exceptions.*;
 import com.maurer.library.mapper.DataMapper;
+import com.maurer.library.models.Author;
 import com.maurer.library.models.User;
 import com.maurer.library.services.interfaces.UserService;
 import com.maurer.library.utils.TokenGenerator;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -126,5 +128,15 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok().body(dataMapper.listUserToListDto(filteredList));
     }
 
+    @Override
+    @GetMapping("/search")
+    public ResponseEntity<List<UserResDto>> searchList(@RequestParam String search) throws InvalidArgumentsException {
+
+        if (Objects.equals(search, "")) throw new InvalidArgumentsException("Sent arguments cannot be null!");
+        System.out.println(search);
+        List<User> searchedUsers = userService.findByPartialFullName(search);
+
+        return ResponseEntity.ok().body(dataMapper.listUserToListDto(searchedUsers));
+    }
 }
 

@@ -1,28 +1,35 @@
 import queryString from "query-string";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { IBook, IBookFilters } from "../util/interface";
 import useGetFilteredBooksQuery, {
   useGetFilteredBooksQueryMock,
 } from "../services/getFilteredBooks";
 import TableComponent from "./TableComponent";
 import { createColumnHelper } from "@tanstack/react-table";
+import { concatArrayOfArrays } from "../util/concatArrayOfArrays";
+import { cleanEmptyUrlParams } from "../util/cleanEmptyUrlParams";
+import { useEffect } from "react";
 
 const BookList: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { genre, available, book, author, isbn } = queryString.parse(
     location.search
   );
+
   const filterParams: IBookFilters = {
-    genre: genre,
-    available: available === "null" ? null : available === "true",
-    book: book,
-    author: author,
-    isbn: isbn,
+    genre: genre || "",
+    available: available !== undefined ? available === "true" : null,
+    book: book || "",
+    author: author || "",
+    isbn: isbn || "",
   };
-  const { isLoading, data: bookData } = useGetFilteredBooksQueryMock(
-    filterParams,
-    1
-  );
+
+  const { isLoading, data: bookData } = useGetFilteredBooksQuery(filterParams);
+
+  useEffect(() => {
+    navigate(`/books?${cleanEmptyUrlParams()}`);
+  }, [window.location.search]);
 
   const columnHelper = createColumnHelper<IBook>();
 
@@ -53,13 +60,15 @@ const BookList: React.FC = () => {
     }),
   ];
 
-  !isLoading && console.log(bookData?.data);
   return (
     <div className="flex w-full justify-center">
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <TableComponent data={bookData?.data ?? []} columns={columns} />
+        <TableComponent
+          data={concatArrayOfArrays(bookData?.pages || []) ?? []}
+          columns={columns}
+        />
       )}
     </div>
   );
