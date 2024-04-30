@@ -8,6 +8,8 @@ import Profile from "./pages/Profile";
 import Books from "./pages/Books";
 import CreateAuthor from "./pages/CreateAuthor";
 import CreateBook from "./pages/CreateBook";
+import EditBook from "./pages/EditBook";
+import DeleteBook from "./pages/DeleteBook";
 
 const App: React.FC = () => {
   const { loginCredentials } = useContext(LoginContext);
@@ -34,6 +36,14 @@ const App: React.FC = () => {
     {
       path: "/books",
       element: <Books />,
+    },
+    {
+      path: "/books/edit/:bookId",
+      element: <EditBook />,
+    },
+    {
+      path: "/books/delete/:bookId",
+      element: <DeleteBook />,
     },
     {
       path: "/actions/create-author",

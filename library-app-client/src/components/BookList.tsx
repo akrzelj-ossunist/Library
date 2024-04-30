@@ -1,14 +1,13 @@
 import queryString from "query-string";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IBook, IBookFilters } from "../util/interface";
-import useGetFilteredBooksQuery, {
-  useGetFilteredBooksQueryMock,
-} from "../services/getFilteredBooks";
+import useGetFilteredBooksQuery from "../services/getFilteredBooks";
 import TableComponent from "./TableComponent";
 import { createColumnHelper } from "@tanstack/react-table";
 import { concatArrayOfArrays } from "../util/concatArrayOfArrays";
 import { cleanEmptyUrlParams } from "../util/cleanEmptyUrlParams";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import RentBookModalContent from "./RentBookModalContent";
 
 const BookList: React.FC = () => {
   const location = useLocation();
@@ -16,6 +15,13 @@ const BookList: React.FC = () => {
   const { genre, available, book, author, isbn } = queryString.parse(
     location.search
   );
+
+  const [showModal, setShowModal] = useState(false);
+  const [bookId, setBookId] = useState("");
+  const [showIfRented, setShowIfRented] = useState({
+    successfully: false,
+    unsuccessfully: false,
+  });
 
   const filterParams: IBookFilters = {
     genre: genre || "",
@@ -65,10 +71,34 @@ const BookList: React.FC = () => {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <TableComponent
-          data={concatArrayOfArrays(bookData?.pages || []) ?? []}
-          columns={columns}
-        />
+        <>
+          <div
+            className={`fixed top-20 right-5 w-[300px] h-10 rounded-lg flex justify-center items-center p-2 bg-green-500 text-white font-bold ease-in-out duration-1000 -z-10 ${
+              showIfRented.successfully ? "opacity-100" : "opacity-0"
+            }`}>
+            <p>Book rented successfully</p>
+          </div>
+
+          <div
+            className={`fixed top-20 right-5 w-[300px] h-10 rounded-lg flex justify-center items-center p-2 bg-red-500 text-white font-bold ease-in-out duration-1000 -z-10 ${
+              showIfRented.unsuccessfully ? "opacity-100" : "opacity-0"
+            }`}>
+            <p>Book renting failed</p>
+          </div>
+          {showModal && (
+            <RentBookModalContent
+              setShowModal={setShowModal}
+              bookId={bookId}
+              setShowIfRented={setShowIfRented}
+            />
+          )}
+          <TableComponent
+            data={concatArrayOfArrays(bookData?.pages || []) ?? []}
+            columns={columns}
+            setBookId={setBookId}
+            setShowModal={setShowModal}
+          />
+        </>
       )}
     </div>
   );

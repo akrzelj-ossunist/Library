@@ -67,7 +67,7 @@ public class BookServiceImpl implements BookService {
 
     public Book editBook(Book book, BookUpdateDto bookUpdateDto) throws InvalidArgumentsException, ObjectDoesntExistException {
 
-        book.setAuthor(authorService.findByAuthorId(bookUpdateDto.getAuthor()));
+        book.setAuthor(authorService.findByFullName(bookUpdateDto.getAuthor()));
         book.setGenre(Genre.valueOf(bookUpdateDto.getGenre().toUpperCase()));
         book.setTitle(bookUpdateDto.getTitle());
         book.setIsbn(bookUpdateDto.getIsbn());

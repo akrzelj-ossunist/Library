@@ -6,19 +6,11 @@ import {
 import OptionsIcon from "../assets/OptionsIcon";
 import { useRef, useState } from "react";
 import { useOnClickOutside } from "usehooks-ts";
-import RentBookModalContent from "./RentBookModalContent";
+import { Link, useLocation } from "react-router-dom";
 
-const TableComponent: React.FC<{
-  data: any;
-  columns: any;
-}> = ({ data, columns }) => {
+const TableComponent: React.FC<any> = ({ data, columns, ...props }) => {
+  const pathname = useLocation().pathname;
   const [optionsMenu, setOptionsMenu] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [bookId, setBookId] = useState("");
-  const [showIfRented, setShowIfRented] = useState({
-    successfully: false,
-    unsuccessfully: false,
-  });
   const optionsRef = useRef<HTMLDivElement | null>(null);
   const { getHeaderGroups, getRowModel } = useReactTable({
     data: data,
@@ -30,23 +22,6 @@ const TableComponent: React.FC<{
 
   return (
     <>
-      {showIfRented.successfully && (
-        <div className="fixed top-20 right-5 w-[300px] h-10 rounded-lg flex justify-center items-center p-2 bg-green-500 text-white font-bold">
-          <p>Book rented successfully</p>
-        </div>
-      )}
-      {showIfRented.unsuccessfully && (
-        <div className="fixed top-20 right-5 w-[300px] h-10 rounded-lg flex justify-center items-center p-2 bg-red-500 text-white font-bold">
-          <p>Book renting failed</p>
-        </div>
-      )}
-      {showModal && (
-        <RentBookModalContent
-          setShowModal={setShowModal}
-          bookId={bookId}
-          setShowIfRented={setShowIfRented}
-        />
-      )}
       <table className="w-[80%] shadow-lg mt-10 tablet:w-[300px] table-auto">
         <thead className="bg-gray-200 font-bold text-gray-500 text-md tablet:hidden">
           {getHeaderGroups().map((headerGroup) => (
@@ -68,7 +43,7 @@ const TableComponent: React.FC<{
         <tbody>
           {data.length === 0 ? (
             <tr className="flex justify-center items-center font-bold w-full">
-              <td className="text-center py-4">No books found</td>
+              <td className="text-center py-4">No data found</td>
             </tr>
           ) : (
             getRowModel().rows.map((row: any) => (
@@ -113,26 +88,28 @@ const TableComponent: React.FC<{
                   {optionsMenu === row.id && (
                     <div
                       ref={optionsRef}
-                      className="absolute rounded-md bg-white w-[150px] left-0 font-semibold shadow-xl cursor-pointer z-10 mt-2">
+                      className="absolute rounded-md bg-white w-[150px] left-0 font-semibold shadow-xl cursor-pointer z-10 mt-2 flex flex-col">
                       <p
                         className="p-2 hover:bg-slate-100"
                         onClick={() => {
-                          setBookId(row.original.id);
-                          setShowModal(true);
+                          props.setBookId(row.original.id);
+                          props.setShowModal(true);
                           setOptionsMenu("");
                         }}>
                         Rent
                       </p>
-                      <p
+                      <Link
+                        to={`${pathname}/edit/${row.original.id}`}
                         className="p-2 hover:bg-slate-100"
                         onClick={() => setOptionsMenu("")}>
                         Edit
-                      </p>
-                      <p
+                      </Link>
+                      <Link
+                        to={`${pathname}/delete/${row.original.id}`}
                         className="p-2 hover:bg-slate-100"
                         onClick={() => setOptionsMenu("")}>
                         Delete
-                      </p>
+                      </Link>
                     </div>
                   )}
                 </td>

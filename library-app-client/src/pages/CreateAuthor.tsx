@@ -7,13 +7,13 @@ import axios from "axios";
 import decodeJwtToken from "../util/jwtToken";
 
 const CreateAuthor: React.FC = () => {
-  const { loginCredentials, setLoginCredentials } = useContext(LoginContext);
+  const { loginCredentials } = useContext(LoginContext);
   const navigate = useNavigate();
   useEffect(() => {
-    loginCredentials.jwtToken === "" && navigate("/login");
+    !loginCredentials.success && navigate("/login");
     decodeJwtToken(loginCredentials.jwtToken)?.scope !== "ADMIN" &&
       navigate("/home");
-  }, []);
+  }, [loginCredentials.success]);
 
   const author = {
     fullName: "",
